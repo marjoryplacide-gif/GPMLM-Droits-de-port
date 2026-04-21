@@ -317,51 +317,59 @@ st.markdown("---")
 st.markdown("""
 <style>
     .stApp {
-        background-color: #FFFFFF;
+        background-color: #FAFAFA;
     }
     .stButton > button {
-        background-color: #1A5276;
+        background-color: #2E86C1;
         color: white;
-        border-radius: 4px;
+        border-radius: 25px;
         padding: 10px 20px;
-        font-weight: bold;
+        font-weight: 600;
         border: none;
         width: 100%;
-        letter-spacing: 1px;
-        text-transform: uppercase;
+        transition: all 0.3s ease;
     }
     .stButton > button:hover {
-        background-color: #154360;
+        background-color: #1A5276;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     .stTextInput > div > input {
-        background-color: #FDFEFE;
-        border: 1px solid #1A5276;
-        border-radius: 3px;
+        background-color: white;
+        border: 2px solid #EBF5FB;
+        border-radius: 10px;
+        padding: 8px;
+    }
+    .stTextInput > div > input:focus {
+        border-color: #2E86C1;
     }
     .stSelectbox > div > div {
-        background-color: #FDFEFE;
-        border: 1px solid #1A5276;
-        border-radius: 3px;
+        background-color: white;
+        border-radius: 10px;
     }
     h1 {
         color: #1A5276;
-        font-size: 28px;
-        font-weight: 800;
-        border-left: 5px solid #1A5276;
-        padding-left: 15px;
+        font-size: 32px;
+        font-weight: 700;
     }
     h2 {
-        color: #1A5276;
-        font-size: 18px;
-        border-bottom: 2px solid #1A5276;
-        padding-bottom: 5px;
+        color: #2E86C1;
+        font-size: 20px;
+        font-weight: 600;
     }
     h3 {
         color: #2E86C1;
     }
     .stInfo {
-        background-color: #EAF2FF;
-        border-left: 4px solid #1A5276;
+        background-color: #EBF5FB;
+        border-radius: 10px;
+        border: none;
+    }
+    div[data-testid="metric-container"] {
+        background-color: white;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 </style>
 """, unsafe_allow_html=True)
