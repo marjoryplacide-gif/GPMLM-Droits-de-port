@@ -402,7 +402,7 @@ if st.button(" Calculer et générer le DN", type="primary"):
         modulation_retenue = min(mod_art2, mod_art3)
         montant_brut, montant_net, montant_percevoir = calcul_montant_final(redevance_navire, modulation_retenue)
 
-      st.success("Calculs effectues avec succes !")
+        st.success("Calculs effectues avec succes !")
         st.markdown("### Resultats")
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("Volume taxable", str(volume) + " m3")
