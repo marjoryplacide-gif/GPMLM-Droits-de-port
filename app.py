@@ -382,6 +382,27 @@ st.markdown("""
         box-shadow: 0 2px 4px rgba(0,0,0,0.08);
         border-left: 4px solid #1A5276;
     }
+        .stInfo {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        border-left: 4px solid #1A5276;
+    }
+    .stTextInput > div > div > input {
+        background-color: white !important;
+        border: 1.5px solid #AED6F1 !important;
+        border-radius: 6px !important;
+    }
+    .stNumberInput > div > div > input {
+        background-color: white !important;
+        border: 1.5px solid #AED6F1 !important;
+        border-radius: 6px !important;
+    }
+    input[type="text"] {
+        background-color: white !important;
+    }
+    input[type="number"] {
+        background-color: white !important;
 </style>
 """, unsafe_allow_html=True)
 
