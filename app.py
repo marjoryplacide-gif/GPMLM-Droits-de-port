@@ -11,6 +11,7 @@ import math
 import msal
 import requests 
 import os 
+import openpyxl
 # ── CONNEXION ONEDRIVE ─────────────────────────────────────────────────────
 CLIENT_ID = st.secrets["CLIENT_ID"]
 CLIENT_SECRET = st.secrets["CLIENT_SECRET"]
@@ -30,12 +31,49 @@ def get_access_token():
 
 def sauvegarder_declaration(data):
     token = get_access_token()
-    headers = {"Authorization": f"Bearer {token}"}
-    # Lire le fichier existant
-    url = "https://graph.microsoft.com/v1.0/me/drive/root:/declarations.xlsx:/content"
-    response = requests.get(url, headers=headers)
-    # Ajouter la nouvelle déclaration
-    # Code à compléter
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    
+    # Lire le fichier existant depuis OneDrive
+    url_download = "https://graph.microsoft.com/v1.0/me/drive/root:/Book 1.xlsx:/content"
+    response = requests.get(url_download, headers=headers)
+    
+    # Charger le fichier Excel en mémoire
+    fichier = io.BytesIO(response.content)
+    wb = openpyxl.load_workbook(fichier)
+    
+    # Accéder à la feuille Déclarations
+    ws = wb["Déclaration"]
+    
+    # Ajouter une nouvelle ligne avec les données
+    ws.append([
+        data["date_entree"],
+        data["date_sortie"],
+        data["representant"],
+        data["nom_navire"],
+        data["provenance"],
+        data["pavillon"],
+        data["zone_dn"],
+        data["tonnage"],
+        data["volume"],
+        data["taux_base"],
+        data["montant_brut"],
+        data["montant_net"],
+        data["montant_percevoir"],
+    ])
+    
+    # Sauvegarder et renvoyer sur OneDrive
+    output = io.BytesIO()
+    wb.save(output)
+    output.seek(0)
+    
+    url_upload = "https://graph.microsoft.com/v1.0/me/drive/root:/Book 1.xlsx:/content"
+    requests.put(url_upload, headers={
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/octet-stream"
+    }, data=output.read())
 
 st.set_page_config(
     page_title="Droits de Port — GPMLM",
@@ -466,6 +504,7 @@ if st.button(" Calculer et générer le DN", type="primary"):
             "montant_percevoir": montant_percevoir,
         }
 
+        sauvegarder_declaration(data_pdf)
         pdf_buffer = generer_pdf(data_pdf)
         st.download_button(
             label=" Télécharger le DN (PDF)",
