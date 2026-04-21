@@ -1,0 +1,367 @@
+
+import streamlit as st
+import pandas as pd
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.units import cm
+from reportlab.pdfgen import canvas
+from reportlab.platypus import Table, TableStyle
+import io
+import math
+
+st.set_page_config(
+    page_title="Droits de Port — GPMLM",
+    page_icon=None,
+    layout="wide"
+)
+
+@st.cache_data
+def charger_navires():
+    df = pd.read_excel(
+        "Book 1.xlsx",
+        sheet_name="Caractéristique navire de pêche"
+    )
+    df.columns = df.columns.str.strip()
+    navires = {}
+    for _, row in df.iterrows():
+        compagnie = str(row["Compagnie"]).strip()
+        navire = str(row["Nom du Navire"]).strip()
+        if compagnie not in navires:
+            navires[compagnie] = {}
+        navires[compagnie][navire] = {
+            "longueur": float(row["Longueur hors tout (m)"]),
+            "largeur": float(row["Largueur maximal (m)"]),
+            "tirant_eau": float(row["Tirant d'eau (m)"])
+        }
+    return navires
+
+try:
+    NAVIRES = charger_navires()
+except Exception as e:
+    st.error(f" Erreur lecture Excel : {e}")
+    NAVIRES = {}
+
+ADRESSES = {
+    "DSK Fish": "53 AVENUE DES ARAWAKS, 97200 FORT DE FRANCE",
+    "Poissonnerie Bapte": "12 RUE DE LA MER, 97200 FORT DE FRANCE",
+    "Delta Transit": "8 BOULEVARD DU PORT, 97200 FORT DE FRANCE",
+}
+
+TAUX_ENTREE = 0.366
+REDEVANCE_DECHETS = 65
+SEUIL_PERCEPTION = 9
+MINIMUM_PERCEPTION = 16
+
+def calcul_te_retenu(longueur, largeur, te_reel):
+    te_theorique = 0.14 * (longueur * largeur) ** 0.5
+    return round(max(te_reel, te_theorique), 2)
+
+def calcul_volume(longueur, largeur, te_retenu):
+    return math.ceil(longueur * largeur * te_retenu)
+
+def calcul_modulation_art2(tonnage, volume):
+    if volume == 0 or tonnage == 0:
+        return 0
+    rapport = tonnage / volume
+    if rapport > 2/15: return 0
+    elif rapport > 1/10: return -0.10
+    elif rapport > 1/20: return -0.30
+    elif rapport > 1/40: return -0.50
+    elif rapport > 1/100: return -0.60
+    elif rapport > 1/250: return -0.70
+    elif rapport > 1/500: return -0.80
+    else: return -0.95
+
+def calcul_abattement_freq(nb_escales):
+    if nb_escales <= 6: return 0
+    elif nb_escales <= 15: return -0.10
+    elif nb_escales <= 30: return -0.15
+    elif nb_escales <= 60: return -0.20
+    elif nb_escales <= 120: return -0.25
+    else: return -0.30
+
+def calcul_montant_final(redevance, modulation):
+    montant_brut = round(redevance * (1 + modulation), 2)
+    montant_net = round(montant_brut + REDEVANCE_DECHETS, 2)
+    if montant_net < SEUIL_PERCEPTION:
+        montant_percevoir = 0
+    elif montant_net < MINIMUM_PERCEPTION:
+        montant_percevoir = MINIMUM_PERCEPTION
+    else:
+        montant_percevoir = montant_net
+    return montant_brut, montant_net, montant_percevoir
+
+def generer_pdf(data):
+    BLEU_PORT = colors.HexColor('#1A5276')
+    BLEU_CLAIR = colors.HexColor('#2E86C1')
+    GRIS_CLAIR = colors.HexColor('#F2F3F4')
+    GRIS_MOYEN = colors.HexColor('#D5D8DC')
+    W, H = A4
+
+    buffer = io.BytesIO()
+    c = canvas.Canvas(buffer, pagesize=A4)
+
+    def draw_section_title(titre, y):
+        bh = 14
+        c.setFillColor(BLEU_PORT)
+        c.rect(1*cm, y - bh, W - 2*cm, bh, fill=1, stroke=0)
+        c.setFillColor(colors.white)
+        c.setFont("Helvetica-Bold", 7)
+        c.drawString(1.3*cm, y - bh + 3, titre.upper())
+        return y - bh
+
+    def draw_field(label, value, x, y, lw=90, vw=130, h=13):
+        c.setFillColor(GRIS_CLAIR)
+        c.rect(x, y - h, lw, h, fill=1, stroke=0)
+        c.setStrokeColor(GRIS_MOYEN)
+        c.setLineWidth(0.4)
+        c.rect(x, y - h, lw + vw, h, fill=0, stroke=1)
+        c.setFillColor(BLEU_PORT)
+        c.setFont("Helvetica-Bold", 6.5)
+        c.drawString(x + 2, y - h + 3.5, label)
+        c.setFillColor(colors.black)
+        c.setFont("Helvetica", 7.5)
+        c.drawString(x + lw + 3, y - h + 3.5, str(value))
+
+    def draw_table(table_data, col_widths, x, y, last_row_blue=False):
+        t = Table(table_data, colWidths=col_widths)
+        style = [
+            ('BACKGROUND', (0,0), (-1,0), BLEU_CLAIR),
+            ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+            ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0,0), (-1,-1), 7.5),
+            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+            ('GRID', (0,0), (-1,-1), 0.4, GRIS_MOYEN),
+            ('BACKGROUND', (0,1), (-1,-1), GRIS_CLAIR),
+            ('ROWHEIGHT', (0,0), (-1,-1), 13),
+        ]
+        if last_row_blue:
+            style += [
+                ('BACKGROUND', (0,-1), (-1,-1), BLEU_PORT),
+                ('TEXTCOLOR', (0,-1), (-1,-1), colors.white),
+                ('FONTNAME', (0,-1), (-1,-1), 'Helvetica-Bold'),
+            ]
+        t.setStyle(TableStyle(style))
+        tw, th = t.wrapOn(c, W, H)
+        t.drawOn(c, x, y - th)
+        return th
+
+    y = H - 10
+    c.setFont("Helvetica-Bold", 14)
+    c.setFillColor(BLEU_PORT)
+    c.drawCentredString(W/2, H - 35, "DÉCLARATION DE NAVIRE")
+    c.setFont("Helvetica", 8)
+    c.setFillColor(BLEU_CLAIR)
+    c.drawCentredString(W/2, H - 50, "Navires de Pêche — Grand Port Maritime de la Martinique")
+    c.setFont("Helvetica-Bold", 8)
+    c.setFillColor(BLEU_PORT)
+    c.drawRightString(W - 1*cm, H - 25, f"DN N° {data['dn_numero']}")
+    c.setFillColor(BLEU_CLAIR)
+    c.roundRect(W - 3.5*cm, H - 55, 2.5*cm, 16, 4, fill=1, stroke=0)
+    c.setFillColor(colors.white)
+    c.setFont("Helvetica-Bold", 9)
+    c.drawCentredString(W - 2.25*cm, H - 44, "ENTRÉE")
+    c.setStrokeColor(BLEU_PORT)
+    c.setLineWidth(1.5)
+    c.line(1*cm, H - 70, W - 1*cm, H - 70)
+    y = H - 78
+
+    y = draw_section_title("1. Identification du navire et de l'escale", y)
+    y -= 3
+    draw_field("Escale N°", data['escale_numero'], 1*cm, y, 65, 95)
+    draw_field("Pavillon", data['pavillon'], 7.2*cm, y, 50, 40)
+    draw_field("Type de navire", data['type_navire'], 11*cm, y, 75, 65)
+    y -= 16
+    draw_field("Nom du navire", data['nom_navire'], 1*cm, y, 75, 120)
+    draw_field("Bureau de", "FR06340 FORT DE FRANCE", 9*cm, y, 55, 155)
+    y -= 16
+    draw_field("Provenance", data['provenance'], 1*cm, y, 65, 120)
+    draw_field("Port de", "FORT DE FRANCE", 9*cm, y, 45, 100)
+    draw_field("Zone DN", data['zone_dn'], 16*cm, y, 50, 40)
+    y -= 16
+    draw_field("Date d'entrée", data['date_entree'], 1*cm, y, 70, 90)
+    draw_field("Date de sortie", data['date_sortie'], 9*cm, y, 70, 90)
+    y -= 16
+    y -= 5
+    y = draw_section_title("2. Représentant", y)
+    y -= 3
+    draw_field("Représentant", data['representant'], 1*cm, y, 75, 130)
+    y -= 16
+    draw_field("Adresse", data['adresse_rep'], 1*cm, y, 50, 380)
+    y -= 16
+    y -= 5
+    y = draw_section_title("3. Tonnage des marchandises", y)
+    y -= 3
+    draw_field("Marchandises diverses", f"{data['tonnage']} t", 1*cm, y, 120, 80)
+    draw_field("TOTAL", f"{data['tonnage']} t", 11*cm, y, 40, 80)
+    y -= 16
+    y -= 5
+    y = draw_section_title("4. Redevance sur le navire (V335)", y)
+    y -= 3
+    c.setFont("Helvetica", 7)
+    c.setFillColor(colors.black)
+    c.drawString(1*cm, y - 10, "Seuil de perception : 9,0 €     Minimum de perception : 16,0 €")
+    y -= 14
+    nav_data = [
+        ["Longueur hors tout", "Largeur", "Tirant d'eau", "Volume taxable", "Taux de base"],
+        [f"{data['longueur']} m", f"{data['largeur']} m", f"{data['te_retenu']} m",
+         f"{data['volume']} m³", str(data['taux_base'])],
+    ]
+    th = draw_table(nav_data, [3.5*cm, 3*cm, 3*cm, 3.5*cm, 3.5*cm], 1*cm, y)
+    y -= (th + 13)
+    y = draw_section_title("5. Modulations et abattements", y)
+    y -= 3
+    mod_data = [
+        ["", "Taux", "Montant (€)"],
+        ["Modulation selon taux de remplissage (Art. 2)", f"{int(data['mod_art2']*100)}%", ""],
+        ["Abattement de fréquence (Art. 3)", f"{int(data['mod_art3']*100)}%", ""],
+        ["Modulation environnementale ESI (Art. 4)", "0%", ""],
+    ]
+    th = draw_table(mod_data, [10*cm, 3*cm, 3.5*cm], 1*cm, y)
+    y -= (th + 13)
+    y = draw_section_title("6. Liquidation", y)
+    y -= 3
+    liq_data = [
+        ["", "Montant (€)"],
+        ["Montant brut", f"{data['montant_brut']} €"],
+        ["Total modulations", f"- {round(data['redevance_navire'] - data['montant_brut'], 2)} €"],
+        ["Montant net", f"{data['montant_net']} €"],
+        ["Redevance déchets d'exploitation (V365)", f"{REDEVANCE_DECHETS} €"],
+        ["MONTANT À PERCEVOIR", f"{data['montant_percevoir']} €"],
+    ]
+    th = draw_table(liq_data, [12*cm, 4.5*cm], 1*cm, y, last_row_blue=True)
+    y -= (th + 13)
+    y = draw_section_title("7. Droits de port à percevoir", y)
+    y -= 3
+    dp_data = [
+        ["Code", "Libellé", "Montant (€)"],
+        ["V335", "Redevance sur le navire", f"{data['montant_brut']} €"],
+        ["V365", "Redevance déchets d'exploitation", f"{REDEVANCE_DECHETS} €"],
+        ["", "TOTAL", f"{data['montant_percevoir']} €"],
+    ]
+    th = draw_table(dp_data, [2.5*cm, 10*cm, 4*cm], 1*cm, y, last_row_blue=True)
+    y -= (th + 13)
+    y = draw_section_title("8. Certification", y)
+    y -= 10
+    c.setFont("Helvetica", 8)
+    c.setFillColor(colors.black)
+    c.drawString(1*cm, y, "Je soussigné(e)")
+    c.line(3.8*cm, y, 12*cm, y)
+    y -= 18
+    c.drawString(1*cm, y, "Qualité")
+    c.line(2.5*cm, y, 12*cm, y)
+    y -= 18
+    c.setFont("Helvetica", 7.5)
+    c.drawString(1*cm, y, "certifie sous les peines de droits, l'exactitude des énonciations de la présente déclaration.")
+    y -= 20
+    c.setFont("Helvetica", 8)
+    c.drawString(1*cm, y, "À Fort de France, le")
+    c.line(4.5*cm, y, 8*cm, y)
+    c.drawString(13*cm, y, "Signature :")
+    c.rect(15*cm, y - 25, 3*cm, 30, fill=0, stroke=1)
+    c.setStrokeColor(BLEU_PORT)
+    c.setLineWidth(1)
+    c.line(1*cm, 20, W - 1*cm, 20)
+    c.setFont("Helvetica", 6)
+    c.setFillColor(BLEU_PORT)
+    c.drawCentredString(W/2, 10, "Grand Port Maritime de la Martinique — Martinique Hub Caraïbe — Our Future is Maritime")
+    c.save()
+    buffer.seek(0)
+    return buffer
+
+st.title("Déclaration des Droits de Port")
+st.subheader("Grand Port Maritime de la Martinique — Navires de pêche")
+st.markdown("---")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.header(" Informations de l'escale")
+    date_entree = st.text_input("Date d'entrée", placeholder="JJ/MM/AAAA")
+    date_sortie = st.text_input("Date de sortie", placeholder="JJ/MM/AAAA")
+    provenance = st.text_input("Provenance (port d'origine)")
+    pavillon = st.text_input("Pavillon", placeholder="Ex: VE")
+    zone_dn = st.selectbox("Zone DN", ["A","B","C","D","E","F","G","H","I","J","M","R","Z"], index =9)
+
+
+with col2:
+    st.header ("Navire")
+    if NAVIRES:
+        representant = st.selectbox("Représentant", list(NAVIRES.keys()))
+        navires_disponibles = list(NAVIRES[representant].keys())
+        nom_navire = st.selectbox("Nom du navire", navires_disponibles)
+        carac = NAVIRES[representant][nom_navire]
+        longueur = carac["longueur"]
+        largeur = carac["largeur"]
+        tirant_eau = carac["tirant_eau"]
+        st.info(f" Caractéristiques : L={longueur}m | b={largeur}m | Te={tirant_eau}m")
+    else:
+        st.warning(" Aucune donnée de navire disponible.")
+        representant = nom_navire = ""
+        longueur = largeur = tirant_eau = 0
+
+    tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f")
+    nb_escales = st.number_input("Nombre d'escales dans l'année", min_value=1, step=1)
+
+st.markdown("---")
+
+if st.button(" Calculer et générer le DN", type="primary"):
+    if not provenance:
+        st.error(" Veuillez renseigner la provenance.")
+    elif longueur == 0:
+        st.error(" Aucune caractéristique de navire disponible.")
+    else:
+        te_retenu = calcul_te_retenu(longueur, largeur, tirant_eau)
+        volume = calcul_volume(longueur, largeur, te_retenu)
+        redevance_navire = round(volume * TAUX_ENTREE, 2)
+        mod_art2 = calcul_modulation_art2(tonnage, volume)
+        mod_art3 = calcul_abattement_freq(nb_escales)
+        modulation_retenue = min(mod_art2, mod_art3)
+        montant_brut, montant_net, montant_percevoir = calcul_montant_final(redevance_navire, modulation_retenue)
+
+        st.success(" Calculs effectués avec succès !")
+        st.markdown("###  Résultats")
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Volume taxable", f"{volume} m³")
+        c2.metric("Redevance navire", f"{redevance_navire} €")
+        c3.metric("Modulation retenue", f"{int(modulation_retenue*100)}%")
+        c4.metric("Montant à percevoir", f"{montant_percevoir} €")
+
+        col_a, col_b = st.columns(2)
+        col_a.info(f"Art. 2 (taux remplissage) : **{int(mod_art2*100)}%**")
+        col_b.info(f"Art. 3 (fréquence, escale n°{nb_escales}) : **{int(mod_art3*100)}%**")
+
+        data_pdf = {
+            "dn_numero":"",
+            "escale_numero":"",
+            "nom_navire": nom_navire,
+            "pavillon": pavillon,
+            "type_navire": "13",
+            "provenance": provenance,
+            "zone_dn": zone_dn,
+            "date_entree": date_entree,
+            "date_sortie": date_sortie,
+            "representant": representant,
+            "adresse_rep": ADRESSES.get(representant, ""),
+            "tonnage": tonnage,
+            "longueur": longueur,
+            "largeur": largeur,
+            "te_retenu": te_retenu,
+            "volume": volume,
+            "taux_base": TAUX_ENTREE,
+            "redevance_navire": redevance_navire,
+            "mod_art2": mod_art2,
+            "mod_art3": mod_art3,
+            "montant_brut": montant_brut,
+            "montant_net": montant_net,
+            "montant_percevoir": montant_percevoir,
+        }
+
+        pdf_buffer = generer_pdf(data_pdf)
+        st.download_button(
+            label=" Télécharger le DN (PDF)",
+            data=pdf_buffer,
+            file_name=f"DN_{nom_navire}.pdf",
+            mime="application/pdf"
+        )
