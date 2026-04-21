@@ -3,3 +3,5 @@ pandas
 reportlab
 openpyxl
 streamlit-authenticator
+msal
+requests
