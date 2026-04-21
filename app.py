@@ -330,63 +330,8 @@ st.markdown("""
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .stButton > button:hover {
-        background-color: #2E86C1;
+        background-color: #7AB32E;
         box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-    }
-    .stTextInput > div > input {
-        background-color: white;
-        border: 1.5px solid #AED6F1;
-        border-radius: 6px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-    }
-    .stTextInput > div > input:focus {
-        border-color: #1A5276;
-        box-shadow: 0 0 0 2px rgba(26,82,118,0.2);
-    }
-    .stSelectbox > div > div {
-        background-color: white;
-        border: 1.5px solid #AED6F1;
-        border-radius: 6px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-    }
-    .stNumberInput > div > div > input {
-        background-color: white;
-        border: 1.5px solid #AED6F1;
-        border-radius: 6px;
-    }
-    h1 {
-        color: #1A5276;
-        font-weight: 800;
-    }
-    h2 {
-        color: #1A5276;
-        background-color: white;
-        padding: 10px 15px;
-        border-radius: 8px;
-        border-left: 4px solid #2E86C1;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-    }
-    h3 {
-        color: #2E86C1;
-    }
-    div[data-testid="metric-container"] {
-        background-color: white;
-        border-radius: 10px;
-        padding: 15px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        border-top: 4px solid #2E86C1;
-    }
-    .stInfo {
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-        border-left: 4px solid #1A5276;
-    }
-        .stInfo {
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-        border-left: 4px solid #1A5276;
     }
     .stTextInput > div > div > input {
         background-color: white !important;
@@ -403,6 +348,41 @@ st.markdown("""
     }
     input[type="number"] {
         background-color: white !important;
+    }
+    .stSelectbox > div > div {
+        background-color: white;
+        border: 1.5px solid #AED6F1;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+    h1 {
+        color: #1A5276;
+        font-weight: 800;
+    }
+    h2 {
+        color: #1A5276;
+        background-color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        border-left: 4px solid #7AB32E;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+    h3 {
+        color: #2E86C1;
+    }
+    div[data-testid="metric-container"] {
+        background-color: white;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border-top: 4px solid #7AB32E;
+    }
+    .stInfo {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        border-left: 4px solid #1A5276;
+    }
 </style>
 """, unsafe_allow_html=True)
 
