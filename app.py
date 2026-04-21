@@ -305,7 +305,7 @@ longueur = carac["longueur"]
 largeur = carac["largeur"]
 tirant_eau = carac["tirant_eau"]
 st.info("Caracteristiques : L=" + str(longueur) + "m | b=" + str(largeur) + "m | Te=" + str(tirant_eau) + "m")
-    else:
+else:
         st.warning(" Aucune donnée de navire disponible.")
         representant = nom_navire = ""
         longueur = largeur = tirant_eau = 0
