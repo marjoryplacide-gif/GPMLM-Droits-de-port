@@ -8,6 +8,7 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import Table, TableStyle
 import io
 import math
+import openpyxl
 
     
 st.set_page_config(
