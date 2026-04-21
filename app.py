@@ -402,18 +402,16 @@ if st.button(" Calculer et générer le DN", type="primary"):
         modulation_retenue = min(mod_art2, mod_art3)
         montant_brut, montant_net, montant_percevoir = calcul_montant_final(redevance_navire, modulation_retenue)
 
-        st.success(" Calculs effectués avec succès !")
-        st.markdown("###  Résultats")
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Volume taxable", f"{volume} m³")
-        c2.metric("Redevance navire", f"{redevance_navire} €")
-        c3.metric("Modulation retenue", f"{int(modulation_retenue*100)}%")
-        c4.metric("Montant à percevoir", f"{montant_percevoir} €")
-
-        col_a, col_b = st.columns(2)
-        col_a.info(f"Art. 2 (taux remplissage) : **{int(mod_art2*100)}%**")
-        col_b.info(f"Art. 3 (fréquence, escale n°{nb_escales}) : **{int(mod_art3*100)}%**")
-
+      st.success("Calculs effectues avec succes !")
+st.markdown("### Resultats")
+c1, c2, c3, c4 = st.columns(4)
+c1.metric("Volume taxable", str(volume) + " m3")
+c2.metric("Redevance navire", str(redevance_navire) + " euros")
+c3.metric("Modulation retenue", str(int(modulation_retenue*100)) + "%")
+c4.metric("Montant a percevoir", str(montant_percevoir) + " euros")
+col_a, col_b = st.columns(2)
+col_a.info("Art. 2 (taux remplissage) : " + str(int(mod_art2*100)) + "%")
+col_b.info("Art. 3 (frequence, escale n " + str(nb_escales) + ") : " + str(int(mod_art3*100)) + "%")
         data_pdf = {
             "dn_numero":"",
             "escale_numero":"",
