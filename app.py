@@ -305,6 +305,57 @@ with col2:
     nb_escales = st.number_input("Nombre d'escales dans l'année", min_value=1, step=1)
 
 st.markdown("---")
+st.markdown("""
+<style>
+    .stApp {
+        background-color: #FFFFFF;
+    }
+    .stButton > button {
+        background-color: #1A5276;
+        color: white;
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-weight: bold;
+        border: none;
+        width: 100%;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    .stButton > button:hover {
+        background-color: #154360;
+    }
+    .stTextInput > div > input {
+        background-color: #FDFEFE;
+        border: 1px solid #1A5276;
+        border-radius: 3px;
+    }
+    .stSelectbox > div > div {
+        background-color: #FDFEFE;
+        border: 1px solid #1A5276;
+        border-radius: 3px;
+    }
+    h1 {
+        color: #1A5276;
+        font-size: 28px;
+        font-weight: 800;
+        border-left: 5px solid #1A5276;
+        padding-left: 15px;
+    }
+    h2 {
+        color: #1A5276;
+        font-size: 18px;
+        border-bottom: 2px solid #1A5276;
+        padding-bottom: 5px;
+    }
+    h3 {
+        color: #2E86C1;
+    }
+    .stInfo {
+        background-color: #EAF2FF;
+        border-left: 4px solid #1A5276;
+    }
+</style>
+""", unsafe_allow_html=True)
 
 if st.button(" Calculer et générer le DN", type="primary"):
     if not provenance:
