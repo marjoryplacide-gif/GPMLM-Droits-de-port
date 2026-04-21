@@ -335,14 +335,24 @@ st.markdown("""
     }
     .stTextInput > div > input {
         background-color: white;
-        border: none;
+        border: 1.5px solid #AED6F1;
         border-radius: 6px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+    .stTextInput > div > input:focus {
+        border-color: #1A5276;
+        box-shadow: 0 0 0 2px rgba(26,82,118,0.2);
     }
     .stSelectbox > div > div {
         background-color: white;
+        border: 1.5px solid #AED6F1;
         border-radius: 6px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+    .stNumberInput > div > div > input {
+        background-color: white;
+        border: 1.5px solid #AED6F1;
+        border-radius: 6px;
     }
     h1 {
         color: #1A5276;
@@ -353,6 +363,7 @@ st.markdown("""
         background-color: white;
         padding: 10px 15px;
         border-radius: 8px;
+        border-left: 4px solid #2E86C1;
         box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     }
     h3 {
