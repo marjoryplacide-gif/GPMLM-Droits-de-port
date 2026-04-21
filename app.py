@@ -317,59 +317,59 @@ st.markdown("---")
 st.markdown("""
 <style>
     .stApp {
-        background-color: #FAFAFA;
+        background-color: #EEF2F7;
     }
     .stButton > button {
-        background-color: #2E86C1;
+        background-color: #1A5276;
         color: white;
-        border-radius: 25px;
-        padding: 10px 20px;
-        font-weight: 600;
+        border-radius: 6px;
+        padding: 12px 20px;
+        font-weight: bold;
         border: none;
         width: 100%;
-        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .stButton > button:hover {
-        background-color: #1A5276;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        background-color: #2E86C1;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     }
     .stTextInput > div > input {
         background-color: white;
-        border: 2px solid #EBF5FB;
-        border-radius: 10px;
-        padding: 8px;
-    }
-    .stTextInput > div > input:focus {
-        border-color: #2E86C1;
+        border: none;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     }
     .stSelectbox > div > div {
         background-color: white;
-        border-radius: 10px;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     }
     h1 {
         color: #1A5276;
-        font-size: 32px;
-        font-weight: 700;
+        font-weight: 800;
     }
     h2 {
-        color: #2E86C1;
-        font-size: 20px;
-        font-weight: 600;
+        color: #1A5276;
+        background-color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     }
     h3 {
         color: #2E86C1;
     }
-    .stInfo {
-        background-color: #EBF5FB;
-        border-radius: 10px;
-        border: none;
-    }
     div[data-testid="metric-container"] {
         background-color: white;
-        border-radius: 12px;
+        border-radius: 10px;
         padding: 15px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border-top: 4px solid #2E86C1;
+    }
+    .stInfo {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        border-left: 4px solid #1A5276;
     }
 </style>
 """, unsafe_allow_html=True)
