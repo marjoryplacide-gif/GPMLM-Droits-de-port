@@ -8,6 +8,34 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import Table, TableStyle
 import io
 import math
+import msal
+import requests 
+import os 
+# ── CONNEXION ONEDRIVE ─────────────────────────────────────────────────────
+CLIENT_ID = st.secrets["CLIENT_ID"]
+CLIENT_SECRET = st.secrets["CLIENT_SECRET"]
+TENANT_ID = st.secrets["TENANT_ID"]
+
+def get_access_token():
+    authority = f"https://login.microsoftonline.com/{TENANT_ID}"
+    app = msal.ConfidentialClientApplication(
+        CLIENT_ID,
+        authority=authority,
+        client_credential=CLIENT_SECRET
+    )
+    result = app.acquire_token_for_client(
+        scopes=["https://graph.microsoft.com/.default"]
+    )
+    return result["access_token"]
+
+def sauvegarder_declaration(data):
+    token = get_access_token()
+    headers = {"Authorization": f"Bearer {token}"}
+    # Lire le fichier existant
+    url = "https://graph.microsoft.com/v1.0/me/drive/root:/declarations.xlsx:/content"
+    response = requests.get(url, headers=headers)
+    # Ajouter la nouvelle déclaration
+    # Code à compléter
 
 st.set_page_config(
     page_title="Droits de Port — GPMLM",
