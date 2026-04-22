@@ -306,7 +306,7 @@ dp_data = [
     c.drawCentredString(W/2, 10, "Grand Port Maritime de la Martinique — Martinique Hub Caraïbe — Our Future is Maritime")
     c.save()
     buffer.seek(0)
-    return buffer
+      return buffer
 
 st.title("Déclaration des Droits de Port")
 st.subheader("Grand Port Maritime de la Martinique — Navires de pêche")
