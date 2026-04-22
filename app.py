@@ -116,8 +116,8 @@ def calcul_abattement_freq(nb_escales):
     else: return -0.30
 
 def calcul_montant_final(redevance, modulation):
-    montant_brut = round(redevance * (1 + modulation), 2)
-    montant_net = round(montant_brut + REDEVANCE_DECHETS, 2)
+    montant_brut = round(redevance * (1 + modulation))
+    montant_net = round(montant_brut + REDEVANCE_DECHETS)
     if montant_net < SEUIL_PERCEPTION:
         montant_percevoir = 0
     elif montant_net < MINIMUM_PERCEPTION:
