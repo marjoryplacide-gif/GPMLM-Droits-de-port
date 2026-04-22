@@ -118,7 +118,7 @@ def calcul_montant_final(redevance, modulation):
     elif montant_net < MINIMUM_PERCEPTION:
         montant_percevoir = MINIMUM_PERCEPTION
     else:
-        montant_percevoir = montant_net
+        montant_percevoir = math.ceil(montant_net)
     return montant_brut, montant_net, montant_percevoir
 
 def generer_pdf(data):
