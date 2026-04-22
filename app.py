@@ -241,12 +241,13 @@ def generer_pdf(data):
     y -= (th + 13)
     y = draw_section_title("5. Modulations et abattements", y)
     y -= 3
+    montant_mod = round(data['redevance_navire'] - data['montant_brut'], 2)
     mod_data = [
-        ["", "Taux", "Montant (€)"],
-        ["Modulation selon taux de remplissage (Art. 2)", f"{int(data['mod_art2']*100)}%", ""],
-        ["Abattement de fréquence (Art. 3)", f"{int(data['mod_art3']*100)}%", ""],
-        ["Modulation environnementale ESI (Art. 4)", "0%", ""],
-    ]
+    ["", "Taux", "Montant (euros)"],
+    ["Modulation selon taux de remplissage (Art. 2)", str(int(data['mod_art2']*100)) + "%", str(montant_mod) + " euros"],
+    ["Abattement de frequence (Art. 3)", str(int(data['mod_art3']*100)) + "%", ""],
+    ["Modulation environnementale ESI (Art. 4)", "0%", ""],
+]
     th = draw_table(mod_data, [10*cm, 3*cm, 3.5*cm], 1*cm, y)
     y -= (th + 13)
     y = draw_section_title("6. Liquidation", y)
