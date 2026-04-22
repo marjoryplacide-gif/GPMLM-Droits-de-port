@@ -196,7 +196,7 @@ def generer_pdf(data):
     c.roundRect(W - 4*cm, H - 60, 3*cm, 18, 4, fill=1, stroke=0)
     c.setFillColor(colors.white)
     c.setFont("Helvetica-Bold", 9)
-    c.drawCentredString(W - 2.5*cm, H - 48, "ENTREE")
+    c.drawCentredString(W - 2.5*cm, H - 52, "ENTREE")
     c.setStrokeColor(BLEU_PORT)
     c.setLineWidth(1.5)
     c.line(1*cm, H - 70, W - 1*cm, H - 70)
