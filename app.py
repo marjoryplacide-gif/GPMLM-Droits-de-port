@@ -465,6 +465,7 @@ if st.button(" Calculer et générer le DN", type="primary"):
             "montant_net": montant_net,
             "montant_percevoir": montant_percevoir,
         }
+        sauvegarder_declaration(data_pdf)
         pdf_buffer = generer_pdf(data_pdf)
         st.download_button(
             label=" Télécharger le DN (PDF)",
