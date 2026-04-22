@@ -81,13 +81,11 @@ def sauvegarder_declaration(data):
     except Exception as e:
         st.error("Erreur sauvegarde : " + str(e))
         return False
-        
-def calcul_te_retenu(longueur, largeur, te_reel):
 
 def calcul_te_retenu(longueur, largeur, te_reel):
     te_theorique = 0.14 * (longueur * largeur) ** 0.5
     return round(max(te_reel, te_theorique), 2)
-
+    
 def calcul_volume(longueur, largeur, te_retenu):
     return math.ceil(longueur * largeur * te_retenu)
 
