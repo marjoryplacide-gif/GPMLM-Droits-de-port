@@ -81,7 +81,7 @@ def sauvegarder_declaration(data):
     except Exception as e:
         st.error("Erreur sauvegarde : " + str(e))
         return False
-
+        
 def calcul_te_retenu(longueur, largeur, te_reel):
 
 def calcul_te_retenu(longueur, largeur, te_reel):
