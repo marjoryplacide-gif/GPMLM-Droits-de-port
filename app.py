@@ -117,7 +117,7 @@ def calcul_abattement_freq(nb_escales):
 
 def calcul_montant_final(redevance, modulation):
     montant_brut = round(redevance * (1 + modulation))
-    montant_net = round(montant_brut + REDEVANCE_DECHETS)
+    montant_net = round(montant_brut - modulation)
     if montant_net < SEUIL_PERCEPTION:
         montant_percevoir = 0
     elif montant_net < MINIMUM_PERCEPTION:
@@ -260,7 +260,7 @@ def generer_pdf(data):
     liq_data = [
         ["", "Montant (euros)"],
         ["Montant brut", str(data['redevance_navire']) + " euros"],
-        ["Total modulations", "- " + str(round(data['redevance_navire'] - data['montant_apres_mod'], 2)) + " euros"],
+        ["Total modulations",str(round(data['redevance_navire'] - data['montant_apres_mod'], 2)) + " euros"],
         ["Montant net", str(data['montant_net']) + " euros"],
         ["Redevance dechets d'exploitation (V365)", str(REDEVANCE_DECHETS) + " euros"],
         ["MONTANT A PERCEVOIR", str(data['montant_percevoir']) + " euros"],
