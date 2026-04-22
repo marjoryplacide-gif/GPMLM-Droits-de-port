@@ -250,12 +250,12 @@ def generer_pdf(data):
     mod_data = [
     ["", "Taux", "Montant (€)"],
     ["Modulation selon taux de remplissage (Art. 2)", str(int(data['mod_art2']*100)) + "%", str(montant_mod) + " €"],
-    ["Abattement de frequence (Art. 3)", str(int(data['mod_art3']*100)) + "%", ""],
+    ["Abattement de fréquence (Art. 3)", str(int(data['mod_art3']*100)) + "%", ""],
     ["Modulation environnementale ESI (Art. 4)", "0%", ""],
 ]
     th = draw_table(mod_data, [10*cm, 3*cm, 3.5*cm], 1*cm, y)
     y -= (th + 13)
-    y = draw_section_title("6. Liquidation", y)
+    y = draw_section_title("6. Liquidation (Redevance navire)", y)
     y -= 3
     montant_mod_affiche = round(data['redevance_navire'] - data['montant_apres_mod'])
     liq_data = [
@@ -267,11 +267,12 @@ def generer_pdf(data):
     y -= (th + 13)
     y = draw_section_title("7. Droits de port à percevoir", y)
     y -= 3
+    montant_net_navire = data['redevance_navire'] - montant_mod_affiche
     dp_data = [
         ["Code", "Libellé", "Montant (€)"],
-        ["V335", "Redevance sur le navire", f"{data['montant_brut']} €"],
-        ["V365", "Redevance déchets d'exploitation", f"{REDEVANCE_DÉCHETS} €"],
-        ["", "TOTAL", f"{data['montant_percevoir']} €"],
+        ["V335", "Redevance sur le navire", str(montant_net_navire) + " €"],
+        ["V365", "Redevance dechets d'exploitation", str(REDEVANCE_DECHETS) + " €"],
+        ["", "TOTAL", str(montant_net_navire + REDEVANCE_DECHETS) + " €"],
     ]
     th = draw_table(dp_data, [2.5*cm, 10*cm, 4*cm], 1*cm, y, last_row_blue=True)
     y -= (th + 13)
@@ -441,7 +442,7 @@ if st.button(" Calculer et générer le DN", type="primary"):
         c4.metric("Montant a percevoir", str(montant_percevoir) + " €")
         col_a, col_b = st.columns(2)
         col_a.info("Art. 2 (taux remplissage) : " + str(int(mod_art2*100)) + "%")
-        col_b.info("Art. 3 (frequence, escale n " + str(nb_escales) + ") : " + str(int(mod_art3*100)) + "%")
+        col_b.info("Art. 3 (fréquence, escale n " + str(nb_escales) + ") : " + str(int(mod_art3*100)) + "%")
 
         data_pdf = {
             "dn_numero":"",
@@ -472,7 +473,7 @@ if st.button(" Calculer et générer le DN", type="primary"):
         sauvegarder_declaration(data_pdf)
         pdf_buffer = generer_pdf(data_pdf)
         st.download_button(
-            label=" Télécharger le DN (PDF)",
+            label=" Télécharger la DN (PDF)",
             data=pdf_buffer,
             file_name=f"DN_{nom_navire}.pdf",
             mime="application/pdf"
