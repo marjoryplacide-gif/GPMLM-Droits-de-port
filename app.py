@@ -429,7 +429,7 @@ if st.button(" Calculer et générer le DN", type="primary"):
     else:
         te_retenu = calcul_te_retenu(longueur, largeur, tirant_eau)
         volume = calcul_volume(longueur, largeur, te_retenu)
-        redevance_navire = round(volume * TAUX_ENTREE, 2)
+        redevance_navire = round(volume * TAUX_ENTREE)
         mod_art2 = calcul_modulation_art2(tonnage, volume)
         mod_art3 = calcul_abattement_freq(nb_escales)
         modulation_retenue = min(mod_art2, mod_art3)
