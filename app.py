@@ -257,8 +257,8 @@ def generer_pdf(data):
     y -= (th + 13)
     y = draw_section_title("6. Liquidation (Redevance navire)", y)
     y -= 3
-    montant_mod_affiche = round(data['redevance_navire'] - data['montant_apres_mod'])
-    montant_net_navire = data['redevance_navire'] - montant_mod_affiche
+ montant_mod_affiche = round(data['redevance_navire'] - data['montant_apres_mod'])
+ montant_net_navire = data['redevance_navire'] - montant_mod_affiche
 liq_data = [
     ["", "Montant (€)"],
     ["Montant brut (Redevance navire)", str(data['redevance_navire']) + " €"],
