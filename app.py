@@ -64,7 +64,7 @@ def sauvegarder_declaration(data):
         url = "https://api.airtable.com/v0/" + st.secrets["AIRTABLE_BASE_ID"] + "/tblA6AtKUvtR5geXr"
         payload = {
             "fields": {
-               "Date entree": data["date_entree"],
+               "Date entr\u00e9e": data["date_entree"],
                 "Date de sortie": data["date_sortie"],
                 "Representant": data["representant"],
                 "Nom du navire": data["nom_navire"],
