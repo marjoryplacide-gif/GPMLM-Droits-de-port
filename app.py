@@ -317,7 +317,7 @@ with col1:
 with col2:
     st.header ("Navire")
     if NAVIRES:
-        representant = st.selectbox("Representant", list(NAVIRES.keys()))
+        representant = st.selectbox("Représentant", list(NAVIRES.keys()))
         tous_navires = list(set(
             navire 
             for compagnie in NAVIRES.values() 
@@ -333,7 +333,7 @@ with col2:
         longueur = carac["longueur"]
         largeur = carac["largeur"]
         tirant_eau = carac["tirant_eau"]
-        st.info("Caracteristiques : L=" + str(longueur) + "m | b=" + str(largeur) + "m | Te=" + str(tirant_eau) + "m")
+        st.info("Caractéristiques : L=" + str(longueur) + "m | b=" + str(largeur) + "m | Te=" + str(tirant_eau) + "m")
     else:
         st.warning("Aucune donnee de navire disponible.")
         representant = nom_navire = ""
