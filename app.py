@@ -277,10 +277,10 @@ dp_data = [
     ["V365", "Redevance dechets d'exploitation", "65 €"],
     ["", "TOTAL", str(montant_net_navire + 65) + " €"],
 ]
-    th = draw_table(dp_data, [2.5*cm, 10*cm, 4*cm], 1*cm, y, last_row_blue=True)
-    y -= (th + 13)
-    y = draw_section_title("8. Certification", y)
-    y -= 10
+     th = draw_table(dp_data, [2.5*cm, 10*cm, 4*cm], 1*cm, y, last_row_blue=True)
+     y -= (th + 13)
+     y = draw_section_title("8. Certification", y)
+     y -= 10
     c.setFont("Helvetica", 8)
     c.setFillColor(colors.black)
     c.drawString(1*cm, y, "Je soussigné(e)")
