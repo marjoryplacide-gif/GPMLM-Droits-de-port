@@ -267,20 +267,20 @@ liq_data = [
     ["Redevance dechets d'exploitation (V365)", "65 €"],
     ["MONTANT A PERCEVOIR", str(data['montant_percevoir']) + " €"],
 ]
-th = draw_table(liq_data, [12*cm, 4.5*cm], 1*cm, y, last_row_blue=True)
-y -= (th + 13)
-y = draw_section_title("7. Droits de port a percevoir", y)
-y -= 3
+    th = draw_table(liq_data, [12*cm, 4.5*cm], 1*cm, y, last_row_blue=True)
+    y -= (th + 13)
+    y = draw_section_title("7. Droits de port a percevoir", y)
+    y -= 3
 dp_data = [
     ["Code", "Libelle", "Montant (€)"],
     ["V335", "Redevance sur le navire", str(montant_net_navire) + " €"],
     ["V365", "Redevance dechets d'exploitation", "65 €"],
     ["", "TOTAL", str(montant_net_navire + 65) + " €"],
 ]
-th = draw_table(dp_data, [2.5*cm, 10*cm, 4*cm], 1*cm, y, last_row_blue=True)
-y -= (th + 13)
-y = draw_section_title("8. Certification", y)
-y -= 10
+    th = draw_table(dp_data, [2.5*cm, 10*cm, 4*cm], 1*cm, y, last_row_blue=True)
+    y -= (th + 13)
+    y = draw_section_title("8. Certification", y)
+    y -= 10
     c.setFont("Helvetica", 8)
     c.setFillColor(colors.black)
     c.drawString(1*cm, y, "Je soussigné(e)")
