@@ -9,6 +9,7 @@ from reportlab.platypus import Table, TableStyle
 import io
 import math
 import openpyxl
+from pyairtable import Api
 
     
 st.set_page_config(
@@ -53,6 +54,35 @@ TAUX_ENTREE = 0.366
 REDEVANCE_DECHETS = 65
 SEUIL_PERCEPTION = 9
 MINIMUM_PERCEPTION = 16
+def sauvegarder_declaration(data):
+    try:
+        api = Api(st.secrets["AIRTABLE_TOKEN"])
+        table = api.table(
+            st.secrets["AIRTABLE_BASE_ID"],
+            st.secrets["AIRTABLE_TABLE_NAME"]
+        )
+        table.create({
+            "Date entree": data["date_entree"],
+            "Date sortie": data["date_sortie"],
+            "Representant": data["representant"],
+            "Nom du navire": data["nom_navire"],
+            "Provenance": data["provenance"],
+            "Pavillon": data["pavillon"],
+            "Zone DN": data["zone_dn"],
+            "Tonnage": str(data["tonnage"]),
+            "Volume": str(data["volume"]),
+            "Taux de base": str(data["taux_base"]),
+            "Montant brut": str(data["montant_brut"]),
+            "Montant net": str(data["montant_net"]),
+            "Montant a percevoir": str(data["montant_percevoir"]),
+            "Statut": "En attente"
+        })
+        return True
+    except Exception as e:
+        st.error("Erreur sauvegarde : " + str(e))
+        return False
+
+def calcul_te_retenu(longueur, largeur, te_reel):
 
 def calcul_te_retenu(longueur, largeur, te_reel):
     te_theorique = 0.14 * (longueur * largeur) ** 0.5
