@@ -316,7 +316,6 @@ with col1:
     date_entree = st.text_input("Date d'entrée", placeholder="JJ/MM/AAAA")
     date_sortie = st.text_input("Date de sortie", placeholder="JJ/MM/AAAA")
     provenance = st.text_input("Provenance (port d'origine)")
-    pavillon = st.text_input("Pavillon", placeholder="Ex: VE")
     zone_dn = st.selectbox("Zone DN", ["A","B","C","D","E","F","G","H","I","J","M","R","Z"], index =9)
 
 
@@ -450,7 +449,7 @@ if st.button(" Calculer et générer le DN", type="primary"):
             "dn_numero":"",
             "escale_numero":"",
             "nom_navire": nom_navire,
-            "pavillon": pavillon,
+            "pavillon": "",
             "type_navire": "13",
             "provenance": provenance,
             "zone_dn": zone_dn,
