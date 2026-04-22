@@ -467,7 +467,7 @@ if st.button(" Calculer et générer le DN", type="primary"):
             "redevance_navire": redevance_navire,
             "mod_art2": mod_art2,
             "mod_art3": mod_art3,
-            "montant_brut": montant_brut,
+            "montant_brut": redevance_navire,
             "montant_net": montant_net,
             "montant_percevoir": montant_percevoir,
         }
