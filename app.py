@@ -56,27 +56,32 @@ SEUIL_PERCEPTION = 9
 MINIMUM_PERCEPTION = 16
 def sauvegarder_declaration(data):
     try:
-        api = Api(st.secrets["AIRTABLE_TOKEN"])
-        table = api.table(
-            st.secrets["AIRTABLE_BASE_ID"],
-            "tblA6AtKUvtR5geXr"
-        )
-        table.create({
-            "Date entree": data["date_entree"],
-            "Date sortie": data["date_sortie"],
-            "Representant": data["representant"],
-            "Nom du navire": data["nom_navire"],
-            "Provenance": data["provenance"],
-            "Pavillon": data["pavillon"],
-            "Zone DN": data["zone_dn"],
-            "Tonnage": str(data["tonnage"]),
-            "Volume": str(data["volume"]),
-            "Taux de base": str(data["taux_base"]),
-            "Montant brut": str(data["montant_brut"]),
-            "Montant net": str(data["montant_net"]),
-            "Montant a percevoir": str(data["montant_percevoir"]),
-            "Statut": "En attente"
-        })
+        import requests as req
+        headers = {
+            "Authorization": "Bearer " + st.secrets["AIRTABLE_TOKEN"],
+            "Content-Type": "application/json"
+        }
+        url = "https://api.airtable.com/v0/" + st.secrets["AIRTABLE_BASE_ID"] + "/tblA6AtKUvtR5geXr"
+        payload = {
+            "fields": {
+                "Date entree": data["date_entree"],
+                "Date sortie": data["date_sortie"],
+                "Representant": data["representant"],
+                "Nom du navire": data["nom_navire"],
+                "Provenance": data["provenance"],
+                "Pavillon": data["pavillon"],
+                "Zone DN": data["zone_dn"],
+                "Tonnage": str(data["tonnage"]),
+                "Volume": str(data["volume"]),
+                "Taux de base": str(data["taux_base"]),
+                "Montant brut": str(data["montant_brut"]),
+                "Montant net": str(data["montant_net"]),
+                "Montant a percevoir": str(data["montant_percevoir"]),
+                "Statut": "En attente"
+            }
+        }
+        response = req.post(url, json=payload, headers=headers)
+        response.raise_for_status()
         return True
     except Exception as e:
         st.error("Erreur sauvegarde : " + str(e))
