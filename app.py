@@ -51,7 +51,7 @@ ADRESSES = {
 }
 
 TAUX_ENTREE = 0.366
-REDEVANCE_DECHETS = 65
+REDEVANCE_DÉCHETS = 65
 SEUIL_PERCEPTION = 9
 MINIMUM_PERCEPTION = 16
 def sauvegarder_declaration(data):
@@ -248,8 +248,8 @@ def generer_pdf(data):
     y -= 3
     montant_mod = round(data['redevance_navire'] - data['montant_apres_mod'], 2)
     mod_data = [
-    ["", "Taux", "Montant (euros)"],
-    ["Modulation selon taux de remplissage (Art. 2)", str(int(data['mod_art2']*100)) + "%", str(montant_mod) + " euros"],
+    ["", "Taux", "Montant (€)"],
+    ["Modulation selon taux de remplissage (Art. 2)", str(int(data['mod_art2']*100)) + "%", str(montant_mod) + " €"],
     ["Abattement de frequence (Art. 3)", str(int(data['mod_art3']*100)) + "%", ""],
     ["Modulation environnementale ESI (Art. 4)", "0%", ""],
 ]
@@ -258,12 +258,10 @@ def generer_pdf(data):
     y = draw_section_title("6. Liquidation", y)
     y -= 3
     liq_data = [
-        ["", "Montant (euros)"],
-        ["Montant brut", str(data['redevance_navire']) + " euros"],
-        ["Total modulations",str(round(data['redevance_navire'] - data['montant_apres_mod'], 2)) + " euros"],
-        ["Montant net", str(data['montant_net']) + " euros"],
-        ["Redevance dechets d'exploitation (V365)", str(REDEVANCE_DECHETS) + " euros"],
-        ["MONTANT A PERCEVOIR", str(data['montant_percevoir']) + " euros"],
+      montant_mod_affiche = round(data['redevance_navire'] - data['montant_apres_mod'])
+      ["Montant brut", str(data['redevance_navire']) + " €"],
+      ["Total modulations", str(montant_mod_affiche) + " €"],
+      ["Montant net", str(data['redevance_navire'] - montant_mod_affiche) + " €"],
     ]
     th = draw_table(liq_data, [12*cm, 4.5*cm], 1*cm, y, last_row_blue=True)
     y -= (th + 13)
@@ -272,7 +270,7 @@ def generer_pdf(data):
     dp_data = [
         ["Code", "Libellé", "Montant (€)"],
         ["V335", "Redevance sur le navire", f"{data['montant_brut']} €"],
-        ["V365", "Redevance déchets d'exploitation", f"{REDEVANCE_DECHETS} €"],
+        ["V365", "Redevance déchets d'exploitation", f"{REDEVANCE_DÉCHETS} €"],
         ["", "TOTAL", f"{data['montant_percevoir']} €"],
     ]
     th = draw_table(dp_data, [2.5*cm, 10*cm, 4*cm], 1*cm, y, last_row_blue=True)
@@ -438,9 +436,9 @@ if st.button(" Calculer et générer le DN", type="primary"):
         st.markdown("### Resultats")
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("Volume taxable", str(volume) + " m3")
-        c2.metric("Redevance navire", str(redevance_navire) + " euros")
+        c2.metric("Redevance navire", str(redevance_navire) + " €")
         c3.metric("Modulation retenue", str(int(modulation_retenue*100)) + "%")
-        c4.metric("Montant a percevoir", str(montant_percevoir) + " euros")
+        c4.metric("Montant a percevoir", str(montant_percevoir) + " €")
         col_a, col_b = st.columns(2)
         col_a.info("Art. 2 (taux remplissage) : " + str(int(mod_art2*100)) + "%")
         col_b.info("Art. 3 (frequence, escale n " + str(nb_escales) + ") : " + str(int(mod_art3*100)) + "%")
