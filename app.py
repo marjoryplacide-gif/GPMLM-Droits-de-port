@@ -59,7 +59,7 @@ def sauvegarder_declaration(data):
         api = Api(st.secrets["AIRTABLE_TOKEN"])
         table = api.table(
             st.secrets["AIRTABLE_BASE_ID"],
-            st.secrets["AIRTABLE_TABLE_NAME"]
+            "tblA6AtKUvtR5geXr"
         )
         table.create({
             "Date entree": data["date_entree"],
