@@ -259,21 +259,24 @@ def generer_pdf(data):
     y -= 3
     montant_mod_affiche = round(data['redevance_navire'] - data['montant_apres_mod'])
     montant_net_navire = data['redevance_navire'] - montant_mod_affiche
-    liq_data = [
-      ["Montant brut", str(data['redevance_navire']) + " €"],
-      ["Total modulations", str(montant_mod_affiche) + " €"],
-      ["Montant net", str(data['redevance_navire'] - montant_mod_affiche) + " €"],
-    ]
-    th = draw_table(liq_data, [12*cm, 4.5*cm], 1*cm, y, last_row_blue=True)
-    y -= (th + 13)
-    y = draw_section_title("7. Droits de port à percevoir", y)
-    y -= 3
-    dp_data = [
-        ["Code", "Libellé", "Montant (€)"],
-        ["V335", "Redevance sur le navire", str(montant_net_navire) + " €"],
-        ["V365", "Redevance dechets d'exploitation", str(REDEVANCE_DECHETS) + " €"],
-        ["", "TOTAL", str(montant_net_navire + REDEVANCE_DECHETS) + " €"],
-    ]
+liq_data = [
+    ["", "Montant (€)"],
+    ["Montant brut (Redevance navire)", str(data['redevance_navire']) + " €"],
+    ["Total modulations", str(montant_mod_affiche) + " €"],
+    ["Montant net", str(data['redevance_navire'] - montant_mod_affiche) + " €"],
+    ["Redevance dechets d'exploitation (V365)", "65 €"],
+    ["MONTANT A PERCEVOIR", str(data['montant_percevoir']) + " €"],
+]
+th = draw_table(liq_data, [12*cm, 4.5*cm], 1*cm, y, last_row_blue=True)
+y -= (th + 13)
+y = draw_section_title("7. Droits de port a percevoir", y)
+y -= 3
+dp_data = [
+    ["Code", "Libelle", "Montant (€)"],
+    ["V335", "Redevance sur le navire", str(montant_net_navire) + " €"],
+    ["V365", "Redevance dechets d'exploitation", "65 €"],
+    ["", "TOTAL", str(montant_net_navire + 65) + " €"],
+]
     th = draw_table(dp_data, [2.5*cm, 10*cm, 4*cm], 1*cm, y, last_row_blue=True)
     y -= (th + 13)
     y = draw_section_title("8. Certification", y)
