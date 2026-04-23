@@ -69,13 +69,12 @@ def sauvegarder_declaration(data):
         url = "https://api.airtable.com/v0/" + st.secrets["AIRTABLE_BASE_ID"] + "/tblA6AtKUvtR5geXr"
         payload = {
             "fields": {
-               "Date entree": data["date_entree"],
-                "Date de sortie": data["date_sortie"],
-                "Representant": data["representant"],
-                "Nom du navire": data["nom_navire"],
-                "Provenance": data["provenance"],
-                "Pavillon": data["pavillon"],
-                "Zone DN": data["zone_dn"],
+               "Date entree": str(data["date_entree"]),
+                "Date de sortie": str(data["date_sortie"]),
+                "Representant": str(data["representant"]),
+                "Nom du navire": str(data["nom_navire"]),
+                "Provenance": str(data["provenance"]),
+                "Zone DN": str(data["zone_dn"]),
                 "Tonnage": str(data["tonnage"]),
                 "Volume": str(data["volume"]),
                 "Taux de base": str(data["taux_base"]),
