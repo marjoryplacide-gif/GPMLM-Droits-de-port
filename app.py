@@ -504,7 +504,10 @@ authenticator = stauth.Authenticate(
     "gpmlm_key",
     cookie_expiry_days=1
 )
-name, authentication_status, username = authenticator.login("Connexion", "main")
+result = authenticator.login("main")
+name = result[0]
+authentication_status = result[1]
+username = result[2]
 
 if authentication_status:
     st.success(f"Connecté en tant que {name}")
