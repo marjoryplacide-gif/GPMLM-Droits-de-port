@@ -213,7 +213,8 @@ def generer_pdf(data):
     y -= 16
     draw_field("Date d'entrée", data['date_entree'], 1*cm, y, 70, 90)
     draw_field("Date de sortie", data['date_sortie'], 9*cm, y, 70, 65)
-    draw_field("Type de navire", data['type_navire'], 10*cm, y, 75, 70)
+    y -= 16
+    draw_field("Type de navire", data['type_navire'], 11*cm, y, 75, 70)
     y -= 16
     y -= 5
     y = draw_section_title("2. Représentant", y)
