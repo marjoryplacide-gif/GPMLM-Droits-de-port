@@ -298,6 +298,9 @@ def generer_pdf(data):
     c.line(4.5*cm, y, 8*cm, y)
     c.drawString(13*cm, y, "Signature :")
     c.rect(15*cm, y - 25, 3*cm, 30, fill=0, stroke=1)
+    c.drawString(3.8*cm, y, data['signataire'])
+    y -= 18
+    c.drawString(2.5*cm, y, data['qualite'])
     c.setStrokeColor(BLEU_PORT)
     c.setLineWidth(1)
     c.line(1*cm, 20, W - 1*cm, 20)
@@ -474,6 +477,8 @@ if st.button(" Calculer et générer le DN", type="primary"):
             "montant_apres_mod": montant_brut,
             "montant_net": montant_net,
             "montant_percevoir": montant_percevoir,
+            "signataire": SIGNATAIRES.get(representant, {}).get("nom", ""),
+            "qualite": SIGNATAIRES.get(representant, {}).get("qualite", ""),
         }
         sauvegarder_declaration(data_pdf)
         pdf_buffer = generer_pdf(data_pdf)
