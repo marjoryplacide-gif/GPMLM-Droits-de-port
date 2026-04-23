@@ -66,11 +66,11 @@ credentials = {
     "usernames": {
         "port": {
             "name": "Port GPMLM",
-            "password": stauth.Hasher(["poissons.decla*"]).generate()[0]
+            "password": "$2b$12$AEKPmCb5Kr/IgEZhtjaThOrI8GUqkyaCkkBo4/6SwGl8MYweYzRxW"
         },
         "douane": {
             "name": "Douane",
-            "password": stauth.Hasher(["poissonsdecla"]).generate()[0]
+            "password": "$2b$12$X/Xs9UWyQ8JV3SupVejTeeZukOC3RQ0Su4Z7UgXL/BydWjc4p/i1W"
         }
     }
 }
