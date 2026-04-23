@@ -424,7 +424,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-if st.button(" Calculer et générer le DN", type="primary"):
+if st.button(" Calculer et générer la DN", type="primary"):
     if not provenance:
         st.error(" Veuillez renseigner la provenance.")
     elif longueur == 0:
