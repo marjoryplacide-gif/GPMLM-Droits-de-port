@@ -185,7 +185,7 @@ def generer_pdf(data):
     y = H - 10
     c.setFont("Helvetica-Bold", 14)
     c.setFillColor(BLEU_PORT)
-    c.drawCentredString(W/2, H - 35, "DÉCLARATION DE NAVIRE")
+    c.drawCentredString(W/2, H - 35, "DÉCLARATION NAVIRE")
     c.setFont("Helvetica", 8)
     c.setFillColor(BLEU_CLAIR)
     c.drawCentredString(W/2, H - 50, "Navires de Pêche — Grand Port Maritime de la Martinique")
@@ -254,16 +254,15 @@ def generer_pdf(data):
 ]
     th = draw_table(mod_data, [10*cm, 3*cm, 3.5*cm], 1*cm, y)
     y -= (th + 13)
-    y = draw_section_title("6. Liquidation (Redevance navire)", y)
+    y = draw_section_title("6. Liquidation - Redevance sur navire", y)
     y -= 3
     montant_mod_affiche = round(data['redevance_navire'] - data['montant_apres_mod'])
     montant_net_navire = data['redevance_navire'] - montant_mod_affiche
     liq_data = [
-        ["", "Montant (€)"],
-        ["Montant brut (Redevance navire)", str(data['redevance_navire']) + " €"],
-        ["Total modulations", str(montant_mod_affiche) + " €"],
+        ["", " (€)"],
+        [" brut (Redevance sur navire)", str(data['redevance_navire']) + " €"],
+        ["Total des modulations", str(montant_mod_affiche) + " €"],
         ["Montant net", str(data['redevance_navire'] - montant_mod_affiche) + " €"],
-        ["Redevance dechets d'exploitation (V365)", "65 €"],
         ["MONTANT A PERCEVOIR", str(data['montant_percevoir']) + " €"],
     ]
     th = draw_table(liq_data, [12*cm, 4.5*cm], 1*cm, y, last_row_blue=True)
@@ -272,14 +271,12 @@ def generer_pdf(data):
     y -= 3
     dp_data = [
         ["Code", "Libelle", "Montant (€)"],
-        ["V335", "Redevance sur le navire", str(montant_net_navire) + " €"],
-        ["V365", "Redevance dechets d'exploitation", "65 €"],
+        ["V335", "Redevance sur navire", str(montant_net_navire) + " €"],
+        ["V365", "Redevance sur les déchets d'exploitation", "65 €"],
         ["", "TOTAL", str(montant_net_navire + 65) + " €"],
     ]
     th = draw_table(dp_data, [2.5*cm, 10*cm, 4*cm], 1*cm, y, last_row_blue=True)
     y -= (th + 13)
-    y = draw_section_title("8. Certification", y)
-    y -= 10
     c.setFont("Helvetica", 8)
     c.setFillColor(colors.black)
     c.drawString(1*cm, y, "Je soussigné(e)")
@@ -316,8 +313,10 @@ with col1:
     st.header(" Informations de l'escale")
     date_entree = st.text_input("Date d'entrée", placeholder="JJ/MM/AAAA")
     date_sortie = st.text_input("Date de sortie", placeholder="JJ/MM/AAAA")
-    provenance = st.text_input("Provenance (port d'origine)")
+    provenance = st.selectbox("Provenance (port d'origine)", ["MARGUARITA","VENEZUELA","GRENADE"])
     zone_dn = st.selectbox("Zone DN", ["A","B","C","D","E","F","G","H","I","J","M","R","Z"], index =9)
+    tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f")
+    nb_escales = st.number_input("Nombre d'escales dans l'année", min_value=1, step=1)
 
 
 with col2:
@@ -344,9 +343,6 @@ with col2:
         st.warning("Aucune donnee de navire disponible.")
         representant = nom_navire = ""
         longueur = largeur = tirant_eau = 0
-
-    tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f")
-    nb_escales = st.number_input("Nombre d'escales dans l'année", min_value=1, step=1)
 
 st.markdown("---")
 st.markdown("""
@@ -430,6 +426,8 @@ if st.button(" Calculer et générer le DN", type="primary"):
         st.error(" Veuillez renseigner la provenance.")
     elif longueur == 0:
         st.error(" Aucune caractéristique de navire disponible.")
+    elif tonnage == 0:
+        st.error("Veuillez renseigner le tonnage.")
     else:
         te_retenu = calcul_te_retenu(longueur, largeur, tirant_eau)
         volume = calcul_volume(longueur, largeur, te_retenu)
