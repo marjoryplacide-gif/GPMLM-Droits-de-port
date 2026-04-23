@@ -81,7 +81,7 @@ def sauvegarder_declaration(data):
             "montant_percevoir": int(data["montant_percevoir"]),
             "statut": "En attente"
         }).execute()
-        st.success("Declaration sauvegardee avec succes !")
+        st.success("Déclaration sauvegardée avec succès !")
         return True
     except Exception as e:
         st.error("Erreur sauvegarde : " + str(e))
