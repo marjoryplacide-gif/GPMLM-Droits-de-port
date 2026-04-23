@@ -279,7 +279,7 @@ def generer_pdf(data):
     montant_net_navire = data['redevance_navire'] - montant_mod_affiche
     liq_data = [
         ["", "Montant (€)"],
-        [" brut (Redevance sur navire)", str(data['redevance_navire']) + " €"],
+        ["Montant brut", str(data['redevance_navire']) + " €"],
         ["Total des modulations", str(montant_mod_affiche) + " €"],
         ["Montant net", str(data['redevance_navire'] - montant_mod_affiche) + " €"],
         ["MONTANT A PERCEVOIR", str(data['montant_percevoir']) + " €"],
