@@ -9,7 +9,6 @@ from reportlab.platypus import Table, TableStyle
 import io
 import math
 import openpyxl
-from pyairtable import Api
 
     
 st.set_page_config(
@@ -59,37 +58,6 @@ TAUX_ENTREE = 0.366
 REDEVANCE_DÉCHETS = 65
 SEUIL_PERCEPTION = 9
 MINIMUM_PERCEPTION = 16
-def sauvegarder_declaration(data):
-    try:
-        import requests as req
-        headers = {
-            "Authorization": "Bearer " + st.secrets["AIRTABLE_TOKEN"],
-            "Content-Type": "application/json"
-        }
-        url = "https://api.airtable.com/v0/" + st.secrets["AIRTABLE_BASE_ID"] + "/tblA6AtKUvtR5geXr"
-        payload = {
-            "fields": {
-               "Date entree": str(data["date_entree"]),
-                "Date de sortie": str(data["date_sortie"]),
-                "Representant": str(data["representant"]),
-                "Nom du navire": str(data["nom_navire"]),
-                "Provenance": str(data["provenance"]),
-                "Zone DN": str(data["zone_dn"]),
-                "Tonnage": str(data["tonnage"]),
-                "Volume": str(data["volume"]),
-                "Taux de base": str(data["taux_base"]),
-                "Montant brut": str(data["montant_brut"]),
-                "Montant net": str(data["montant_net"]),
-                "Montant a percevoir": str(data["montant_percevoir"]),
-                "Statut": "En attente"
-            }
-        }
-        response = req.post(url, json=payload, headers=headers)
-        response.raise_for_status()
-        return True
-    except Exception as e:
-        st.error("Erreur sauvegarde : " + str(e))
-        return False
 
 def calcul_te_retenu(longueur, largeur, te_reel):
     te_theorique = 0.14 * (longueur * largeur) ** 0.5
@@ -477,7 +445,6 @@ if st.button(" Calculer et générer la DN", type="primary"):
             "montant_percevoir": montant_percevoir,
             "signataire": SIGNATAIRES.get(representant, {}).get("nom", ""),
         }
-        sauvegarder_declaration(data_pdf)
         pdf_buffer = generer_pdf(data_pdf)
         st.download_button(
             label=" Télécharger la DN (PDF)",
