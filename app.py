@@ -323,7 +323,7 @@ with col2:
     provenance = st.selectbox("Provenance (port d'origine)", ["MARGUARITA","VENEZUELA","GRENADE"])
     zone_dn = st.selectbox("Zone DN", ["A","B","C","D","E","F","G","H","I","J","M","R","Z"], index =9)
     tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f")
-    nb_escales = st.number_input("Nombre d'escales dans l'année", min_value=1, step=1)
+    nb_escales = st.number_input("Nombre d'escales depuis le début de l'année (par navire)", min_value=1, step=1)
 
 
 with col1:
