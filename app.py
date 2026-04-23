@@ -422,6 +422,10 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 if st.button(" Calculer et générer le DN", type="primary"):
+    if not date_entree:
+        st.error("Veuillez renseigner la date d'entrée.")
+    elif not date_sortie:
+        st.error("Veuillez renseigner la date de sortie.")
     if not provenance:
         st.error(" Veuillez renseigner la provenance.")
     elif longueur == 0:
