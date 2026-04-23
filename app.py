@@ -299,10 +299,10 @@ def generer_pdf(data):
     c.setFont("Helvetica", 8)
     c.setFillColor(colors.black)
     c.drawString(1*cm, y, "Je soussigné(e)")
-    c.line(3.8*cm, y, 12*cm, y)
+    c.drawString(3.8*cm, y, data['signataire'])
     y -= 18
     c.drawString(1*cm, y, "Qualité")
-    c.line(2.5*cm, y, 12*cm, y)
+    c.drawString(2.5*cm, y, data['qualite'])
     y -= 18
     c.setFont("Helvetica", 7.5)
     c.drawString(1*cm, y, "certifie sous les peines de droits, l'exactitude des énonciations de la présente déclaration.")
@@ -496,6 +496,7 @@ if st.button(" Calculer et générer la DN", type="primary"):
             "montant_net": montant_net,
             "montant_percevoir": montant_percevoir,
             "signataire": SIGNATAIRES.get(representant, {}).get("nom", ""),
+            "qualite": SIGNATAIRES.get(representant, {}).get("qualite", ""),
         }
         sauvegarder_declaration(data_pdf)
         st.session_state.pdf_buffer = generer_pdf(data_pdf)
