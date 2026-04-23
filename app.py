@@ -213,7 +213,7 @@ def generer_pdf(data):
     draw_field("Date d'entrée", data['date_entree'], 1*cm, y, 70, 90)
     draw_field("Date de sortie", data['date_sortie'], 9*cm, y, 70, 65)
     y -= 16
-    draw_field("Zone DN", data['zone_dn'], 16*cm, y, 50, 40)
+    draw_field("Zone DN", data['zone_dn'], 1*cm, y, 50, 40)
     draw_field("Type de navire", data['type_navire'], 11*cm, y, 75, 70)
     y -= 16
     y -= 5
