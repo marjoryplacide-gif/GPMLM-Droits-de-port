@@ -300,7 +300,6 @@ def generer_pdf(data):
     c.rect(15*cm, y - 25, 3*cm, 30, fill=0, stroke=1)
     c.drawString(3.8*cm, y, data['signataire'])
     y -= 18
-    c.drawString(2.5*cm, y, data['qualite'])
     c.setStrokeColor(BLEU_PORT)
     c.setLineWidth(1)
     c.line(1*cm, 20, W - 1*cm, 20)
