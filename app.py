@@ -213,7 +213,7 @@ def generer_pdf(data):
     c.setFillColor(BLEU_PORT)
     c.drawRightString(W - 1*cm, H - 25, f"DN N° {data['dn_numero']}")
     c.setFillColor(BLEU_CLAIR)
-    c.roundRect(W - 4*cm, H - 60, 4*cm, 18, 4, fill=1, stroke=0)
+    c.roundRect(W - 3*cm, H - 60, 4*cm, 18, 4, fill=1, stroke=0)
     c.setFillColor(colors.white)
     c.setFont("Helvetica-Bold", 9)
     c.drawCentredString(W - 2.5*cm, H - 52, "ENTRÉE / SORTIE")
