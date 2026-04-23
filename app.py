@@ -438,6 +438,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+if "resultats" not in st.session_state:
+    st.session_state.resultats = None
+if "pdf_buffer" not in st.session_state:
+    st.session_state.pdf_buffer = None
 
 if st.button(" Calculer et générer la DN", type="primary"):
     if not provenance:
