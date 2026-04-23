@@ -309,8 +309,8 @@ st.markdown("---")
 
 col1, col2 = st.columns(2)
 
-with col1:
-    st.header(" Informations de l'escale")
+with col2:
+    st.header(" Escale")
     date_entree = st.text_input("Date d'entrée", placeholder="JJ/MM/AAAA")
     date_sortie = st.text_input("Date de sortie", placeholder="JJ/MM/AAAA")
     provenance = st.selectbox("Provenance (port d'origine)", ["MARGUARITA","VENEZUELA","GRENADE"])
@@ -319,7 +319,7 @@ with col1:
     nb_escales = st.number_input("Nombre d'escales dans l'année", min_value=1, step=1)
 
 
-with col2:
+with col1:
     st.header ("Navire")
     if NAVIRES:
         representant = st.selectbox("Représentant", list(NAVIRES.keys()))
