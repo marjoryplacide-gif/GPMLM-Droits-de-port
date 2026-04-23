@@ -49,6 +49,11 @@ ADRESSES = {
     "Poissonnerie Bapte": "12 RUE DE LA MER, 97200 FORT DE FRANCE",
     "Delta Transit": "8 BOULEVARD DU PORT, 97200 FORT DE FRANCE",
 }
+SIGNATAIRES = {
+    "DSK Fish": {"nom": "DESCAS MARTHE", "qualite": "DIRECTRICE COMMERCIALE"},
+    "Poissonnerie Bapte": {"nom": "SARL BAPTE", "qualite": "QUALITE"},
+    "Delta Transit": {"nom": "SARL DELTA TRANSIT", "qualite": "QUALITE"},
+}
 
 TAUX_ENTREE = 0.366
 REDEVANCE_DÉCHETS = 65
