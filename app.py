@@ -10,6 +10,7 @@ import io
 import math
 import openpyxl
 from supabase import create_client
+import streamlit_authenticator as stauth
 
     
 st.set_page_config(
@@ -60,6 +61,19 @@ REDEVANCE_DÉCHETS = 65
 SEUIL_PERCEPTION = 9
 MINIMUM_PERCEPTION = 16
 
+
+credentials = {
+    "usernames": {
+        "port": {
+            "name": "Port GPMLM",
+            "password": stauth.Hasher(["poissons.decla*"]).generate()[0]
+        },
+        "douane": {
+            "name": "Douane",
+            "password": stauth.Hasher(["poissonsdecla"]).generate()[0]
+        }
+    }
+}
 def sauvegarder_declaration(data):
     try:
         supabase = create_client(
