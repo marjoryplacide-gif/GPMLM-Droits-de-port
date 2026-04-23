@@ -516,7 +516,7 @@ if authentication_status:
      )
     declarations = supabase.table("declaration").select("*").execute()
     df = pd.DataFrame(declarations.data)
-     if len(df) > 0:
+    if len(df) > 0:
         st.markdown("### Toutes les déclarations")
         st.dataframe(df)
     else:
