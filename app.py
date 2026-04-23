@@ -204,7 +204,6 @@ def generer_pdf(data):
 
     y = draw_section_title("1. Identification du navire et de l'escale", y)
     y -= 3
-    draw_field("Pavillon", data['pavillon'], 7.2*cm, y, 50, 40)
     draw_field("Type de navire", data['type_navire'], 11*cm, y, 75, 65)
     y -= 16
     draw_field("Nom du navire", data['nom_navire'], 1*cm, y, 75, 120)
