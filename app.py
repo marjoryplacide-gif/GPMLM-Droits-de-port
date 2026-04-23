@@ -59,13 +59,14 @@ TAUX_ENTREE = 0.366
 REDEVANCE_DÉCHETS = 65
 SEUIL_PERCEPTION = 9
 MINIMUM_PERCEPTION = 16
+
 def sauvegarder_declaration(data):
     try:
         supabase = create_client(
             st.secrets["SUPABASE_URL"],
             st.secrets["SUPABASE_KEY"]
         )
-        supabase.table("declarations").insert({
+        supabase.table("declaration").insert({
             "date_entree": str(data["date_entree"]),
             "date_sortie": str(data["date_sortie"]),
             "representant": data["representant"],
