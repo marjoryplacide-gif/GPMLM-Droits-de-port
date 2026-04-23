@@ -214,7 +214,7 @@ def generer_pdf(data):
     draw_field("Date de sortie", data['date_sortie'], 9*cm, y, 70, 65)
     y -= 16
     draw_field("Zone DN", data['zone_dn'], 1*cm, y, 50, 40)
-    draw_field("Type de navire", data['type_navire'], 11*cm, y, 75, 70)
+    draw_field("Type de navire", data['type_navire'], 9*cm, y, 75, 70)
     y -= 16
     y -= 5
     y = draw_section_title("2. Représentant", y)
