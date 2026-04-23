@@ -9,6 +9,7 @@ from reportlab.platypus import Table, TableStyle
 import io
 import math
 import openpyxl
+from github import Github
 
     
 st.set_page_config(
@@ -58,6 +59,46 @@ TAUX_ENTREE = 0.366
 REDEVANCE_DÉCHETS = 65
 SEUIL_PERCEPTION = 9
 MINIMUM_PERCEPTION = 16
+def sauvegarder_declaration(data):
+    try:
+        g = Github(st.secrets["GITHUB_TOKEN"])
+        repo = g.get_repo(st.secrets["GITHUB_REPO"])
+        
+        # Lire le fichier Excel existant
+        file = repo.get_contents("Book 1.xlsx")
+        fichier = io.BytesIO(file.decoded_content)
+        wb = openpyxl.load_workbook(fichier)
+        ws = wb["Déclaration"]
+        # Ajouter une nouvelle ligne
+        ws.append([
+            data["date_entree"],
+            data["date_sortie"],
+            data["representant"],
+            data["nom_navire"],
+            data["provenance"],
+            data["zone_dn"],
+            str(data["tonnage"]),
+            str(data["volume"]),
+            str(data["taux_base"]),
+            str(data["montant_brut"]),
+            str(data["montant_net"]),
+            str(data["montant_percevoir"]),
+            "En attente"
+        ])
+        # Sauvegarder et envoyer sur GitHub
+        output = io.BytesIO()
+        wb.save(output)
+        output.seek(0)
+        repo.update_file(
+            "Book 1.xlsx",
+            "Nouvelle declaration",
+            output.read(),
+            file.sha
+        )
+        return True
+    except Exception as e:
+        st.error("Erreur sauvegarde : " + str(e))
+        return False
 
 def calcul_te_retenu(longueur, largeur, te_reel):
     te_theorique = 0.14 * (longueur * largeur) ** 0.5
