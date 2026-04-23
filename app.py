@@ -495,3 +495,34 @@ if st.button(" Calculer et générer la DN", type="primary"):
             file_name=f"DN_{nom_navire}.pdf",
             mime="application/pdf"
         )
+st.markdown("---")
+st.markdown("### Accès administration")
+
+authenticator = stauth.Authenticate(
+    credentials,
+    "gpmlm_cookie",
+    "gpmlm_key",
+    cookie_expiry_days=1
+)
+name, authentication_status, username = authenticator.login("Connexion", "main")
+
+if authentication_status:
+    st.success(f"Connecté en tant que {name}")
+    authenticator.logout("Déconnexion", "main")
+    
+    supabase = create_client(
+        st.secrets["SUPABASE_URL"],
+        st.secrets["SUPABASE_KEY"]
+     )
+     declarations = supabase.table("declaration").select("*").execute()
+    df = pd.DataFrame(declarations.data)
+    
+    if len(df) > 0:
+        st.markdown("### Toutes les déclarations")
+        st.dataframe(df)
+    else:
+        st.warning("Aucune déclaration pour le moment.")
+elif authentication_status == False:
+    st.error("Identifiant ou mot de passe incorrect.")
+elif authentication_status == None:
+    st.info("Veuillez vous connecter.")
