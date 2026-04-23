@@ -486,6 +486,7 @@ if st.button(" Calculer et générer la DN", type="primary"):
             "montant_percevoir": montant_percevoir,
             "signataire": SIGNATAIRES.get(representant, {}).get("nom", ""),
         }
+        sauvegarder_declaration(data_pdf)
         pdf_buffer = generer_pdf(data_pdf)
         st.download_button(
             label=" Télécharger la DN (PDF)",
