@@ -9,7 +9,7 @@ from reportlab.platypus import Table, TableStyle
 import io
 import math
 import openpyxl
-from github import Github
+from supabase import create_client
 
     
 st.set_page_config(
@@ -61,40 +61,26 @@ SEUIL_PERCEPTION = 9
 MINIMUM_PERCEPTION = 16
 def sauvegarder_declaration(data):
     try:
-        g = Github(st.secrets["GITHUB_TOKEN"])
-        repo = g.get_repo(st.secrets["GITHUB_REPO"])
-        
-        # Lire le fichier Excel existant
-        file = repo.get_contents("Book 1.xlsx")
-        fichier = io.BytesIO(file.decoded_content)
-        wb = openpyxl.load_workbook(fichier)
-        ws = wb["Declaration"]
-        # Ajouter une nouvelle ligne
-        ws.append([
-            data["date_entree"],
-            data["date_sortie"],
-            data["representant"],
-            data["nom_navire"],
-            data["provenance"],
-            data["zone_dn"],
-            str(data["tonnage"]),
-            str(data["volume"]),
-            str(data["taux_base"]),
-            str(data["montant_brut"]),
-            str(data["montant_net"]),
-            str(data["montant_percevoir"]),
-            "En attente"
-        ])
-        # Sauvegarder et envoyer sur GitHub
-        output = io.BytesIO()
-        wb.save(output)
-        output.seek(0)
-        repo.update_file(
-            "Book 1.xlsx",
-            "Nouvelle declaration",
-            output.read(),
-            file.sha
+        supabase = create_client(
+            st.secrets["SUPABASE_URL"],
+            st.secrets["SUPABASE_KEY"]
         )
+        supabase.table("declarations").insert({
+            "date_entree": str(data["date_entree"]),
+            "date_sortie": str(data["date_sortie"]),
+            "representant": data["representant"],
+            "nom_navire": data["nom_navire"],
+            "provenance": data["provenance"],
+            "zone_dn": data["zone_dn"],
+            "tonnage": float(data["tonnage"]),
+            "volume": int(data["volume"]),
+            "taux_base": float(data["taux_base"]),
+            "montant_brut": int(data["montant_brut"]),
+            "montant_net": int(data["montant_net"]),
+            "montant_percevoir": int(data["montant_percevoir"]),
+            "statut": "En attente"
+        }).execute()
+        st.success("Declaration sauvegardee avec succes !")
         return True
     except Exception as e:
         st.error("Erreur sauvegarde : " + str(e))
