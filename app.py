@@ -311,8 +311,8 @@ col1, col2 = st.columns(2)
 
 with col2:
     st.header(" Escale")
-    date_entree = st.text_input("Date d'entrée", placeholder="JJ/MM/AAAA")
-    date_sortie = st.text_input("Date de sortie", placeholder="JJ/MM/AAAA")
+    date_entree =  st.date_input("Date d'entrée", format="DD/MM/YYYY")
+    date_sortie =  st.date_input("Date de sortie", format="DD/MM/YYYY")
     provenance = st.selectbox("Provenance (port d'origine)", ["MARGUARITA","VENEZUELA","GRENADE"])
     zone_dn = st.selectbox("Zone DN", ["A","B","C","D","E","F","G","H","I","J","M","R","Z"], index =9)
     tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f")
@@ -418,10 +418,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 if st.button(" Calculer et générer le DN", type="primary"):
-    if not date_entree:
-        st.error("Veuillez renseigner la date d'entrée.")
-    elif not date_sortie:
-        st.error("Veuillez renseigner la date de sortie.")
     if not provenance:
         st.error(" Veuillez renseigner la provenance.")
     elif longueur == 0:
@@ -456,8 +452,8 @@ if st.button(" Calculer et générer le DN", type="primary"):
             "type_navire": "13",
             "provenance": provenance,
             "zone_dn": zone_dn,
-            "date_entree": date_entree,
-            "date_sortie": date_sortie,
+            "date_entree": date_entree.strftime("%d/%m/%Y"),
+            "date_sortie": date_sortie.strftime("%d/%m/%Y"),
             "representant": representant,
             "adresse_rep": ADRESSES.get(representant, ""),
             "tonnage": tonnage,
