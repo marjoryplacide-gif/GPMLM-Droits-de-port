@@ -55,6 +55,11 @@ SIGNATAIRES = {
     "Poissonnerie Bapte": {"nom": "SARL BAPTE", "qualite": "QUALITE"},
     "Delta Transit": {"nom": "SARL DELTA TRANSIT", "qualite": "QUALITE"},
 }
+EMAILS = {
+    "DSK Fish": "dskfishs@gmail.com",
+    "Poissonnerie Bapte": "poissonnerie-bapte@wannadoo.fr",
+    "Delta Transit": "s.fran0xL187zois@deltatransit.fr",
+}
 
 TAUX_ENTREE = 0.366
 REDEVANCE_DÉCHETS = 65
