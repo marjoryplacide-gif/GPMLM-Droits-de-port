@@ -438,6 +438,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+
 if st.button(" Calculer et générer la DN", type="primary"):
     if not provenance:
         st.error(" Veuillez renseigner la provenance.")
@@ -493,13 +494,35 @@ if st.button(" Calculer et générer la DN", type="primary"):
             "signataire": SIGNATAIRES.get(representant, {}).get("nom", ""),
         }
         sauvegarder_declaration(data_pdf)
-        pdf_buffer = generer_pdf(data_pdf)
-        st.download_button(
-            label=" Télécharger la DN (PDF)",
-            data=pdf_buffer,
-            file_name=f"DN_{nom_navire}.pdf",
-            mime="application/pdf"
-        )
+        st.session_state.pdf_buffer = generer_pdf(data_pdf)
+        st.session_state.resultats = {
+            "volume": volume,
+            "redevance_navire": redevance_navire,
+            "modulation_retenue": modulation_retenue,
+            "montant_percevoir": montant_percevoir,
+            "mod_art2": mod_art2,
+            "mod_art3": mod_art3,
+            "nb_escales": nb_escales,
+            "nom_navire": nom_navire
+        }
+if st.session_state.resultats:
+    r = st.session_state.resultats
+    st.success("Calculs effectués avec succès !")
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Volume taxable", str(r["volume"]) + " m3")
+    c2.metric("Redevance navire", str(r["redevance_navire"]) + " €")
+    c3.metric("Modulation retenue", str(int(r["modulation_retenue"]*100)) + "%")
+    c4.metric("Montant à percevoir", str(r["montant_percevoir"]) + " €")
+    col_a, col_b = st.columns(2)
+    col_a.info("Art. 2 : " + str(int(r["mod_art2"]*100)) + "%")
+    col_b.info("Art. 3 (escale n° " + str(r["nb_escales"]) + ") : " + str(int(r["mod_art3"]*100)) + "%")
+    st.download_button(
+        label="Télécharger la DN (PDF)",
+        data=st.session_state.pdf_buffer,
+        file_name="DN_" + r["nom_navire"] + ".pdf",
+        mime="application/pdf"
+    )
+
 st.markdown("---")
 st.markdown("### Accès administration")
 
