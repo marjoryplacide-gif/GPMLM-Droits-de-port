@@ -514,10 +514,9 @@ if authentication_status:
         st.secrets["SUPABASE_URL"],
         st.secrets["SUPABASE_KEY"]
      )
-     declarations = supabase.table("declaration").select("*").execute()
+    declarations = supabase.table("declaration").select("*").execute()
     df = pd.DataFrame(declarations.data)
-    
-    if len(df) > 0:
+     if len(df) > 0:
         st.markdown("### Toutes les déclarations")
         st.dataframe(df)
     else:
