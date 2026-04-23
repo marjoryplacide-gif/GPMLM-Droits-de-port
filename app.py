@@ -11,6 +11,7 @@ import math
 import openpyxl
 from supabase import create_client
 import streamlit_authenticator as stauth
+from datetime import date
 
     
 st.set_page_config(
@@ -142,7 +143,7 @@ def calcul_montant_final(redevance, modulation):
     elif montant_net < MINIMUM_PERCEPTION:
         montant_percevoir = MINIMUM_PERCEPTION
     else:
-        montant_percevoir = math.ceil(montant_net)
+        montant_percevoir =(montant_net)
     return montant_brut, montant_net, montant_percevoir
 
 def generer_pdf(data):
@@ -308,12 +309,9 @@ def generer_pdf(data):
     c.drawString(1*cm, y, "certifie sous les peines de droits, l'exactitude des énonciations de la présente déclaration.")
     y -= 20
     c.setFont("Helvetica", 8)
-    c.drawString(1*cm, y, "À Fort de France, le")
-    c.line(4.5*cm, y, 8*cm, y)
+    c.drawString(1*cm, y, "À Fort de France, le " + data['date_signature'])
     c.drawString(13*cm, y, "Signature :")
     c.rect(15*cm, y - 25, 3*cm, 30, fill=0, stroke=1)
-    c.drawString(3.8*cm, y, data['signataire'])
-    y -= 18
     c.setStrokeColor(BLEU_PORT)
     c.setLineWidth(1)
     c.line(1*cm, 20, W - 1*cm, 20)
@@ -497,6 +495,7 @@ if st.button(" Calculer et générer la DN", type="primary"):
             "montant_percevoir": montant_percevoir,
             "signataire": SIGNATAIRES.get(representant, {}).get("nom", ""),
             "qualite": SIGNATAIRES.get(representant, {}).get("qualite", ""),
+            "date_signature": date.today().strftime("%d/%m/%Y")
         }
         sauvegarder_declaration(data_pdf)
         st.session_state.pdf_buffer = generer_pdf(data_pdf)
