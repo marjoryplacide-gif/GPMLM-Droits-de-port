@@ -137,13 +137,13 @@ def calcul_abattement_freq(nb_escales):
 
 def calcul_montant_final(redevance, modulation):
     montant_brut = round(redevance * (1 + modulation))
-    montant_net = round(montant_brut - modulation)
+    montant_net = montant_brut
     if montant_net < SEUIL_PERCEPTION:
         montant_percevoir = 0
     elif montant_net < MINIMUM_PERCEPTION:
         montant_percevoir = MINIMUM_PERCEPTION
     else:
-        montant_percevoir =(montant_net)
+        montant_percevoir = montant_net
     return montant_brut, montant_net, montant_percevoir
 
 def generer_pdf(data):
