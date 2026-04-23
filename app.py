@@ -524,12 +524,23 @@ if authentication_status:
      )
     declarations = supabase.table("declaration").select("*").execute()
     df = pd.DataFrame(declarations.data)
+    st.markdown("### Toutes les déclarations")
     if len(df) > 0:
-        st.markdown("### Toutes les déclarations")
         st.dataframe(df)
+        
+        st.markdown("### Envoyer un rappel")
+        representant_rappel = st.selectbox(
+            "Choisir le représentant",
+            list(EMAILS.keys())
+        )
+        date_rappel = st.text_input("Date concernée", placeholder="Ex: 28/04/2026")
+
+        email_dest = EMAILS.get(representant_rappel, "")
+        sujet = f"Rappel - Declaration de navire en attente - {date_rappel}"
+        message = f"Bonjour,%0A%0ANous vous rappelons que votre declaration de navire pour le {date_rappel} n'a pas encore ete soumise.%0A%0AMerci de bien vouloir la soumettre dans les plus brefs delais.%0A%0ACordialement,%0AGrand Port Maritime de la Martinique"
+
+        lien_mail = f"mailto:{email_dest}?subject={sujet}&body={message}"
+        st.markdown(f'<a href="{lien_mail}" target="_blank" style="background-color:#1A5276;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;">Envoyer un rappel</a>', unsafe_allow_html=True)
     else:
         st.warning("Aucune déclaration pour le moment.")
-elif authentication_status == False:
-    st.error("Identifiant ou mot de passe incorrect.")
-elif authentication_status == None:
-    st.info("Veuillez vous connecter.")
+
