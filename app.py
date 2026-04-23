@@ -68,7 +68,7 @@ def sauvegarder_declaration(data):
         file = repo.get_contents("Book 1.xlsx")
         fichier = io.BytesIO(file.decoded_content)
         wb = openpyxl.load_workbook(fichier)
-        ws = wb["Déclaration"]
+        ws = wb["Declaration"]
         # Ajouter une nouvelle ligne
         ws.append([
             data["date_entree"],
