@@ -331,8 +331,8 @@ col1, col2 = st.columns(2)
 
 with col2:
     st.header(" Escale")
-    date_entree =  st.date_input("Date d'entrée", value=NONE)
-    date_sortie =  st.date_input("Date de sortie", value=NONE)
+    date_entree =  st.date_input("Date d'entrée", value=none)
+    date_sortie =  st.date_input("Date de sortie", value=none)
     provenance = st.selectbox("Provenance (port d'origine)", ["MARGUARITA","VENEZUELA","GRENADE"])
     zone_dn = st.selectbox("Zone DN", ["A","B","C","D","E","F","G","H","I","J","M","R","Z"], index =9)
     tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f")
