@@ -322,9 +322,12 @@ def generer_pdf(data):
     c.save()
     buffer.seek(0)
     return buffer
-
-st.title("Déclaration des Droits de Port")
-st.subheader("Grand Port Maritime de la Martinique — Navires de pêche")
+col_logo, col_titre = st.columns([1, 4])
+with col_logo:
+    st.image("logo_gpmlm.jpg", width=150)
+with col_titre:
+    st.title("Déclaration des Droits de Port")
+    st.subheader("Grand Port Maritime de la Martinique — Navires de pêche")
 st.markdown("---")
 
 col1, col2 = st.columns(2)
@@ -438,6 +441,14 @@ st.markdown("""
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.08);
         border-left: 4px solid #1A5276;
+    div[data-testid="stDateInput"] button {
+    background-color: #1A5276 !important;
+    color: white !important;
+}
+div[data-testid="stDateInput"] [aria-selected="true"] {
+    background-color: #1A5276 !important;
+    color: white !important;
+}
     }
 </style>
 """, unsafe_allow_html=True)
