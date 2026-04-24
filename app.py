@@ -450,11 +450,19 @@ st.markdown("""
     background-color: #1A5276 !important;
     color: white !important;
 }
-div[data-testid="stDateInput"] [aria-selected="true"] {
+button[kind="primary"] {
     background-color: #1A5276 !important;
-    color: white !important;
 }
-    }
+[data-testid="stDateInput"] [aria-selected="true"] {
+    background-color: #1A5276 !important;
+    border-radius: 50% !important;
+}
+[data-testid="stDateInput"] [data-today="true"] {
+    border-color: #1A5276 !important;
+    color: #1A5276 !important;
+}
+
+}
 </style>
 """, unsafe_allow_html=True)
 
