@@ -155,6 +155,11 @@ def generer_pdf(data):
 
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=A4)
+    try:
+        c.drawImage("logo_gpmlm.jpg", 1*cm, H - 65, width=100, height=55,
+                    preserveAspectRatio=True, mask='auto')
+    except:
+        pass
 
     def draw_section_title(titre, y):
         bh = 14
