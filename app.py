@@ -446,29 +446,30 @@ if "resultats" not in st.session_state:
     st.session_state.resultats = None
 if "pdf_buffer" not in st.session_state:
     st.session_state.pdf_buffer = None
+
 if "longueur" not in dir():
     longueur = 0
     largeur = 0
     tirant_eau = 0
+    
 if st.button(" Calculer et générer la DN", type="primary"):
-    if not provenance:
-        st.error(" Veuillez renseigner la provenance.")
-    elif longueur == 0:
-        st.error(" Aucune caractéristique de navire disponible.")
-    elif tonnage == 0:
-        st.error("Veuillez renseigner le tonnage.")
-    elif not representant:
-        st.error("Veuillez choisir un représentant.")
-    elif not nom_navire:
-        st.error("Veuillez choisir un navire.")
-    elif nb_escales == 0:
-        st.error("Veuillez renseigner le nombre d'escales.")
     if date_entree is None:
         st.error("Veuillez sélectionner la date d'entrée.")
     elif date_sortie is None:
         st.error("Veuillez sélectionner la date de sortie.")
+    elif not representant:
+        st.error("Veuillez choisir un représentant.")
+    elif not nom_navire:
+        st.error("Veuillez choisir un navire.")
+    if not provenance:
+        st.error(" Veuillez renseigner la provenance.")
+    elif tonnage == 0:
+        st.error("Veuillez renseigner le tonnage.")
+    elif nb_escales == 0:
+        st.error("Veuillez renseigner le nombre d'escales.")
+    elif longueur == 0:
+        st.error(" Aucune caractéristique de navire disponible.")
 
-    
     else:
         te_retenu = calcul_te_retenu(longueur, largeur, tirant_eau)
         volume = calcul_volume(longueur, largeur, te_retenu)
