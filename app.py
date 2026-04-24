@@ -331,8 +331,8 @@ col1, col2 = st.columns(2)
 
 with col2:
     st.header(" Escale")
-    date_entree =  st.date_input("Date d'entrée", value = None)
-    date_sortie =  st.date_input("Date de sortie", value = None)
+    date_entree =  st.date_input("Date d'entrée", value = None, format="DD/MM/YYYY")
+    date_sortie =  st.date_input("Date de sortie", value = None, format="DD/MM/YYYY")
     provenance = st.selectbox("Provenance (port d'origine)",[""] + ["MARGUARITA","VENEZUELA","GRENADE"])
     zone_dn = st.selectbox("Zone DN", ["A","B","C","D","E","F","G","H","I","J","M","R","Z"], index =9)
     tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f")
@@ -446,7 +446,10 @@ if "resultats" not in st.session_state:
     st.session_state.resultats = None
 if "pdf_buffer" not in st.session_state:
     st.session_state.pdf_buffer = None
-
+if "longueur" not in dir():
+    longueur = 0
+    largeur = 0
+    tirant_eau = 0
 if st.button(" Calculer et générer la DN", type="primary"):
     if not provenance:
         st.error(" Veuillez renseigner la provenance.")
