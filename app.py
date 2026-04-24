@@ -57,9 +57,9 @@ SIGNATAIRES = {
     "Delta Transit": {"nom": "DELTA TRANSIT SARL",},
 }
 EMAILS = {
-    "DSK Fish": "dskfishs@gmail.com",
-    "Poissonnerie Bapte": "poissonnerie-bapte@wannadoo.fr",
-    "Delta Transit": "s.fran0xL187zois@deltatransit.fr",
+    "DSK Fish": "l.vaillant@martinique.port.fr",
+    "Poissonnerie Bapte": ",
+    "Delta Transit": "",
 }
 
 TAUX_ENTREE = 0.366
