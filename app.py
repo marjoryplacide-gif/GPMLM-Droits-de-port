@@ -359,11 +359,11 @@ with col1:
                 NAVIRES[c][nom_navire] 
                 for c in NAVIRES 
                 if nom_navire in NAVIRES[c]
-        )
-        longueur = carac["longueur"]
-        largeur = carac["largeur"]
-        tirant_eau = carac["tirant_eau"]
-        st.info("Caractéristiques : L=" + str(longueur) + "m | b=" + str(largeur) + "m | Te=" + str(tirant_eau) + "m")
+            )
+            longueur = carac["longueur"]
+            largeur = carac["largeur"]
+            tirant_eau = carac["tirant_eau"]
+            st.info("Caractéristiques : L=" + str(longueur) + "m | b=" + str(largeur) + "m | Te=" + str(tirant_eau) + "m")
     else:
         st.warning("Aucune donnee de navire disponible.")
         representant = nom_navire = ""
