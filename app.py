@@ -302,9 +302,9 @@ def generer_pdf(data):
     c.drawString(1*cm, y, "Je soussigné(e)")
     c.drawString(3.8*cm, y, data['signataire'])
     y -= 18
-if data['representant'] == "DSK Fish":
-    c.drawString(1*cm, y, "Qualité")
-    c.drawString(2.5*cm, y, data['qualite'])
+    if data['representant'] == "DSK Fish":
+        c.drawString(1*cm, y, "Qualité")
+        c.drawString(2.5*cm, y, data['qualite'])
     y -= 18
     c.setFont("Helvetica", 7.5)
     c.drawString(1*cm, y, "certifie sous les peines de droits, l'exactitude des énonciations de la présente déclaration.")
