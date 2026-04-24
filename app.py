@@ -101,7 +101,7 @@ def sauvegarder_declaration(data):
             "montant_percevoir": int(data["montant_percevoir"]),
             "statut": "Terminée"
         }).execute()
-        st.success("Déclaration sauvegardée avec succès !")
+        st.session_state.save_success = True
         return True
     except Exception as e:
         st.error("Erreur sauvegarde : " + str(e))
@@ -290,13 +290,13 @@ def generer_pdf(data):
     y = draw_section_title("7. Droits de port a percevoir", y)
     y -= 3
     dp_data = [
-        ["Code", "Libelle", "Montant (€)"],
+        ["Code", "Libélle", "Montant (€)"],
         ["V335", "Redevance sur navire", str(montant_net_navire) + " €"],
         ["V365", "Redevance sur les déchets d'exploitation", "65 €"],
         ["", "TOTAL", str(montant_net_navire + 65) + " €"],
     ]
     th = draw_table(dp_data, [2.5*cm, 10*cm, 4*cm], 1*cm, y, last_row_blue=True)
-    y -= (th + 25)
+    y -= (th + 30)
     c.setFont("Helvetica", 8)
     c.setFillColor(colors.black)
     c.drawString(1*cm, y, "Je soussigné(e)")
@@ -457,17 +457,6 @@ if st.button(" Calculer et générer la DN", type="primary"):
         mod_art3 = calcul_abattement_freq(nb_escales)
         modulation_retenue = min(mod_art2, mod_art3)
         montant_brut, montant_net, montant_percevoir = calcul_montant_final(redevance_navire, modulation_retenue)
-
-        st.success("Calculs effectues avec succes !")
-        st.markdown("### Resultats")
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Volume taxable", str(volume) + " m3")
-        c2.metric("Redevance navire", str(redevance_navire) + " €")
-        c3.metric("Modulation retenue", str(int(modulation_retenue*100)) + "%")
-        c4.metric("Montant a percevoir", str(montant_percevoir) + " €")
-        col_a, col_b = st.columns(2)
-        col_a.info("Art. 2 (taux remplissage) : " + str(int(mod_art2*100)) + "%")
-        col_b.info("Art. 3 (fréquence, escale n " + str(nb_escales) + ") : " + str(int(mod_art3*100)) + "%")
 
         data_pdf = {
             "dn_numero":"",
