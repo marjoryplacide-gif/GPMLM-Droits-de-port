@@ -324,7 +324,7 @@ def generer_pdf(data):
     return buffer
 col_logo, col_titre = st.columns([1, 4])
 with col_logo:
-    st.image("logo_gpmlm.jpg", width=150)
+    st.image("logo_gpmlm.png", width=150)
 with col_titre:
     st.title("Déclaration des Droits de Port")
     st.subheader("Grand Port Maritime de la Martinique — Navires de pêche")
