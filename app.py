@@ -331,24 +331,24 @@ col1, col2 = st.columns(2)
 
 with col2:
     st.header(" Escale")
-    date_entree =  st.date_input("Date d'entrée", format="DD/MM/YYYY")
-    date_sortie =  st.date_input("Date de sortie", format="DD/MM/YYYY")
+    date_entree =  st.date_input("Date d'entrée", value=NONE)
+    date_sortie =  st.date_input("Date de sortie", value=NONE)
     provenance = st.selectbox("Provenance (port d'origine)", ["MARGUARITA","VENEZUELA","GRENADE"])
     zone_dn = st.selectbox("Zone DN", ["A","B","C","D","E","F","G","H","I","J","M","R","Z"], index =9)
     tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f")
-    nb_escales = st.number_input("Nombre d'escales du navire depuis le début de l'année", min_value=1, step=1)
+    nb_escales = st.number_input("Nombre d'escales du navire depuis le début de l'année", min_value=0, step=1)
 
 
 with col1:
     st.header ("Navire")
     if NAVIRES:
-        representant = st.selectbox("Représentant", list(NAVIRES.keys()))
+        representant = st.selectbox("Représentant", [""] + list(NAVIRES.keys()))
         tous_navires = list(set(
             navire 
             for compagnie in NAVIRES.values() 
             for navire in compagnie.keys()
         ))
-        tous_navires.sort()
+        tous_navires = [""] + list(set(...))
         nom_navire = st.selectbox("Nom du navire", tous_navires)
         carac = next(
             NAVIRES[c][nom_navire] 
@@ -449,6 +449,18 @@ if st.button(" Calculer et générer la DN", type="primary"):
         st.error(" Aucune caractéristique de navire disponible.")
     elif tonnage == 0:
         st.error("Veuillez renseigner le tonnage.")
+    elif not representant:
+        st.error("Veuillez choisir un représentant.")
+    elif not nom_navire:
+        st.error("Veuillez choisir un navire.")
+    elif nb_escales == 0:
+        st.error("Veuillez renseigner le nombre d'escales.")
+    if date_entree is None:
+        st.error("Veuillez sélectionner la date d'entrée.")
+    elif date_sortie is None:
+        st.error("Veuillez sélectionner la date de sortie.")
+
+    
     else:
         te_retenu = calcul_te_retenu(longueur, largeur, tirant_eau)
         volume = calcul_volume(longueur, largeur, te_retenu)
