@@ -58,7 +58,7 @@ SIGNATAIRES = {
 }
 EMAILS = {
     "DSK Fish": "l.vaillant@martinique.port.fr",
-    "Poissonnerie Bapte": ",
+    "Poissonnerie Bapte": "",
     "Delta Transit": "",
 }
 
