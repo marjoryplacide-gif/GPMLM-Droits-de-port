@@ -348,8 +348,13 @@ with col1:
             for compagnie in NAVIRES.values() 
             for navire in compagnie.keys()
         ))
-        tous_navires = [""] + list(set(...))
+        tous_navires = [""] + sorted(list(set(
+            navire 
+            for compagnie in NAVIRES.values() 
+            for navire in compagnie.keys()
+)))
         nom_navire = st.selectbox("Nom du navire", tous_navires)
+        if nom_navire:
         carac = next(
             NAVIRES[c][nom_navire] 
             for c in NAVIRES 
