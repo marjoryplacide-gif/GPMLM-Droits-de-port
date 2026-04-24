@@ -295,7 +295,7 @@ def generer_pdf(data):
     y = draw_section_title("7. Droits de port a percevoir", y)
     y -= 3
     dp_data = [
-        ["Code", "Libélle", "Montant (€)"],
+        ["Code", "Libellé", "Montant (€)"],
         ["V335", "Redevance sur navire", str(montant_net_navire) + " €"],
         ["V365", "Redevance sur les déchets d'exploitation", "65 €"],
         ["", "TOTAL", str(montant_net_navire + 65) + " €"],
