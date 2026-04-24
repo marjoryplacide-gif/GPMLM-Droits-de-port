@@ -53,8 +53,8 @@ ADRESSES = {
 }
 SIGNATAIRES = {
     "DSK Fish": {"nom": "DESCAS MARTHE", "qualite": "DIRECTRICE COMMERCIALE"},
-    "Poissonnerie Bapte": {"nom": "SARL BAPTE", "qualite": "QUALITE"},
-    "Delta Transit": {"nom": "SARL DELTA TRANSIT", "qualite": "QUALITE"},
+    "Poissonnerie Bapte": {"nom": "SARL BAPTE",},
+    "Delta Transit": {"nom": "DELTA TRANSIT SARL",},
 }
 EMAILS = {
     "DSK Fish": "dskfishs@gmail.com",
@@ -516,6 +516,9 @@ if st.session_state.resultats:
         file_name="DN_" + r["nom_navire"] + ".pdf",
         mime="application/pdf"
     )
+if st.session_state.get("save_success"):
+    st.success("Déclaration sauvegardée avec succès !")
+    st.session_state.save_success = False
 
 st.markdown("---")
 st.markdown("### Accès administration")
