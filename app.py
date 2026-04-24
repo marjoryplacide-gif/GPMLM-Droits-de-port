@@ -590,7 +590,7 @@ if authentication_status:
 
         email_dest = EMAILS.get(representant_rappel, "")
         sujet = f"Rappel - Declaration de navire en attente - {date_rappel}"
-        message = f"Bonjour,%0A%0ANous vous rappelons que votre declaration de navire pour le {date_rappel} n'a pas encore ete soumise.%0A%0AMerci de bien vouloir la soumettre dans les plus brefs delais.%0A%0ACordialement,%0AGrand Port Maritime de la Martinique"
+        message = f"Bonjour,%0A%0ANous vous rappelons que votre déclaration de navire pour l'escale du {date_rappel} n'a pas encore été soumise.%0A%0AMerci de bien vouloir la soumettre dans les plus brefs délais.%0A%0ACordialement,%0AGrand Port Maritime de la Martinique"
 
         lien_mail = f"mailto:{email_dest}?subject={sujet}&body={message}"
         st.markdown(f'<a href="{lien_mail}" target="_blank" style="background-color:#1A5276;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;">Envoyer un rappel</a>', unsafe_allow_html=True)
