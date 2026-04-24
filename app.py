@@ -355,10 +355,10 @@ with col1:
 )))
         nom_navire = st.selectbox("Nom du navire", tous_navires)
         if nom_navire:
-        carac = next(
-            NAVIRES[c][nom_navire] 
-            for c in NAVIRES 
-            if nom_navire in NAVIRES[c]
+            carac = next(
+                NAVIRES[c][nom_navire] 
+                for c in NAVIRES 
+                if nom_navire in NAVIRES[c]
         )
         longueur = carac["longueur"]
         largeur = carac["largeur"]
