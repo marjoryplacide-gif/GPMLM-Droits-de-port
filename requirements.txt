@@ -4,4 +4,4 @@ reportlab
 openpyxl
 requests
 supabase
-streamlit-authenticator
+streamlit-authenticator==0.3.3
