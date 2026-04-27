@@ -530,16 +530,18 @@ if st.button(" Calculer et générer la DN", type="primary"):
             "mod_art2": mod_art2,
             "mod_art3": mod_art3,
             "nb_escales": nb_escales,
-            "nom_navire": nom_navire
+            "nom_navire": nom_navire,
+            "montant_final": montant_percevoir + 65
         }
 if st.session_state.resultats:
     r = st.session_state.resultats
     st.success("Calculs effectués avec succès !")
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3, c4, c5 = st.columns(5)
     c1.metric("Volume taxable", str(r["volume"]) + " m3")
     c2.metric("Redevance navire", str(r["redevance_navire"]) + " €")
     c3.metric("Modulation retenue", str(int(r["modulation_retenue"]*100)) + "%")
     c4.metric("Montant à percevoir", str(r["montant_percevoir"]) + " €")
+    c5.metric("TOTAL À PAYER", str(r["montant_final"]) + " €")
     col_a, col_b = st.columns(2)
     col_a.info("Art. 2 : " + str(int(r["mod_art2"]*100)) + "%")
     col_b.info("Art. 3 (escale n° " + str(r["nb_escales"]) + ") : " + str(int(r["mod_art3"]*100)) + "%")
