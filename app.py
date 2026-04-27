@@ -527,11 +527,11 @@ if st.button(" Calculer et générer la DN", type="primary"):
             "redevance_navire": redevance_navire,
             "modulation_retenue": modulation_retenue,
             "montant_percevoir": montant_percevoir,
+            "montant_final": montant_percevoir + 65,
             "mod_art2": mod_art2,
             "mod_art3": mod_art3,
             "nb_escales": nb_escales,
-            "nom_navire": nom_navire,
-            "montant_final": montant_percevoir + 65
+            "nom_navire": nom_navire
         }
 if st.session_state.resultats:
     r = st.session_state.resultats
