@@ -581,7 +581,26 @@ if authentication_status:
     df = pd.DataFrame(declarations.data)
     st.markdown("### Toutes les déclarations")
     if len(df) > 0:
-        st.dataframe(df)
+        for index, row in df.iterrows():
+        with st.expander(f"{row['nom_navire']} - {row['date_entree']}"):
+            col1, col2 = st.columns(2)
+            with col1:
+                st.write("**Représentant :**", row['representant'])
+                st.write("**Provenance :**", row['provenance'])
+                st.write("**Volume :**", row['volume'])
+                st.write("**Montant à percevoir :**", str(row['montant_percevoir']) + " €")
+            with col2:
+                st.write("**Statut :**", row['statut'])
+                st.write("**Réception douane :**", row['reception_douane'])
+                if username == "douane":
+                    if row['reception_douane'] == "En attente":
+                        if st.button("Marquer comme reçu", key=f"recu_{index}"):
+                            supabase.table("declaration").update(
+                                {"reception_douane": "Reçu"}
+                            ).eq("id", row['id']).execute()
+                            st.rerun()
+                    else:
+                        st.success("Reçu ✓")
         
         st.markdown("### Envoyer un rappel")
         representant_rappel = st.selectbox(
