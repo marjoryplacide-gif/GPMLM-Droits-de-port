@@ -599,7 +599,7 @@ if authentication_status:
                                 {"reception_douane": "Reçu"}
                             ).eq("id", row['id']).execute()
                             st.rerun()
-                    else:
+                else:
                         st.success("Reçu ✓")
         
         st.markdown("### Envoyer un rappel")
