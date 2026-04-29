@@ -589,7 +589,7 @@ if authentication_status:
                     st.write("**Provenance :**", row['provenance'])
                     st.write("**Volume Taxable :**", str(row['volume'])+ " m3")
                     st.write("**Montant à percevoir :**", str(row['montant_percevoir']) + " €")
-                    st.write("**Total à payer :**",str(r["montant_final"]) + " €")
+                    st.write("**Total à payer :**",str(row["montant_final"]) + " €")
             with col2:
                 st.write("**Statut :**", row['statut'])
                 st.write("**Réception douane :**",row.get('reception_douane', 'En attente'))
