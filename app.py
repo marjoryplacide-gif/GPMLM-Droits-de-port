@@ -99,6 +99,7 @@ def sauvegarder_declaration(data):
             "montant_brut": int(data["montant_brut"]),
             "montant_net": int(data["montant_net"]),
             "montant_percevoir": int(data["montant_percevoir"]),
+            "montant_final": int(data["montant_percevoir"]) + 65,
             "statut": "Terminée"
         }).execute()
         st.session_state.save_success = True
