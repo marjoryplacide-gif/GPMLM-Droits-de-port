@@ -582,13 +582,13 @@ if authentication_status:
     st.markdown("### Toutes les déclarations")
     if len(df) > 0:
         for index, row in df.iterrows():
-        with st.expander(f"{row['nom_navire']} - {row['date_entree']}"):
-            col1, col2 = st.columns(2)
-            with col1:
-                st.write("**Représentant :**", row['representant'])
-                st.write("**Provenance :**", row['provenance'])
-                st.write("**Volume :**", row['volume'])
-                st.write("**Montant à percevoir :**", str(row['montant_percevoir']) + " €")
+            with st.expander(f"{row['nom_navire']} - {row['date_entree']}"):
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.write("**Représentant :**", row['representant'])
+                    st.write("**Provenance :**", row['provenance'])
+                    st.write("**Volume :**", row['volume'])
+                    st.write("**Montant à percevoir :**", str(row['montant_percevoir']) + " €")
             with col2:
                 st.write("**Statut :**", row['statut'])
                 st.write("**Réception douane :**", row['reception_douane'])
