@@ -587,8 +587,9 @@ if authentication_status:
                 with col1:
                     st.write("**Représentant :**", row['representant'])
                     st.write("**Provenance :**", row['provenance'])
-                    st.write("**Volume :**", row['volume'])
+                    st.write("**Volume Taxable :**", row['volume'])
                     st.write("**Montant à percevoir :**", str(row['montant_percevoir']) + " €")
+                    st.write("**Total à payer :**",str(r["montant_final"]) + " €")
             with col2:
                 st.write("**Statut :**", row['statut'])
                 st.write("**Réception douane :**",row.get('reception_douane', 'En attente'))
@@ -599,8 +600,8 @@ if authentication_status:
                                 {"reception_douane": "Reçu"}
                             ).eq("id", row['id']).execute()
                             st.rerun()
-                else:
-                    st.success("Reçu ✓")
+                        else:
+                            st.success("Reçu ✓")
         
         st.markdown("### Envoyer un rappel")
         representant_rappel = st.selectbox(
