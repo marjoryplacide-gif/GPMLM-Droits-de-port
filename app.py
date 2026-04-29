@@ -600,7 +600,7 @@ if authentication_status:
                             ).eq("id", row['id']).execute()
                             st.rerun()
                 else:
-                        st.success("Reçu ✓")
+                    st.success("Reçu ✓")
         
         st.markdown("### Envoyer un rappel")
         representant_rappel = st.selectbox(
