@@ -591,9 +591,9 @@ if authentication_status:
                     st.write("**Montant à percevoir :**", str(row['montant_percevoir']) + " €")
             with col2:
                 st.write("**Statut :**", row['statut'])
-                st.write("**Réception douane :**", row['reception_douane'])
+                st.write("**Réception douane :**",row.get('reception_douane', 'En attente'))
                 if username == "douane":
-                    if row['reception_douane'] == "En attente":
+                   if row.get('reception_douane', 'En attente') == "En attente":
                         if st.button("Marquer comme reçu", key=f"recu_{index}"):
                             supabase.table("declaration").update(
                                 {"reception_douane": "Reçu"}
