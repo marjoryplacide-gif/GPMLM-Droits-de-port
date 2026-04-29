@@ -587,7 +587,7 @@ if authentication_status:
                 with col1:
                     st.write("**Représentant :**", row['representant'])
                     st.write("**Provenance :**", row['provenance'])
-                    st.write("**Volume Taxable :**", str(r["volume"]) + " m3")
+                    st.write("**Volume Taxable :**", str(row['volume'])+ " m3")
                     st.write("**Montant à percevoir :**", str(row['montant_percevoir']) + " €")
                     st.write("**Total à payer :**",str(r["montant_final"]) + " €")
             with col2:
