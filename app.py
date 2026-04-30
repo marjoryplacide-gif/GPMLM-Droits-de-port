@@ -601,7 +601,7 @@ if authentication_status:
                         if st.button("Marquer comme reçu", key=f"recu_{index}"):
                             supabase.table("declaration").update(
                                 {"reception_douane": "Recu"}
-                            ).eq("id", row['id']).execute()
+                            ).eq("nom_navire", row['nom_navire']).eq("date_entree", row['date_entree']).execute()
                             st.rerun()
                         else:
                             st.success("Reçu ✓")
