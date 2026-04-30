@@ -585,6 +585,7 @@ if authentication_status:
      )
     declarations = supabase.table("declaration").select("*").execute()
     df = pd.DataFrame(declarations.data)
+    df = df.sort_values(by='id', ascending=False)
     if 'Reception_douane' in df.columns:
         df = df[df['Reception_douane'] != "Recu"]
     st.markdown("### Toutes les déclarations")
