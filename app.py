@@ -578,7 +578,7 @@ if authentication_status:
         st.secrets["SUPABASE_URL"],
         st.secrets["SUPABASE_KEY"]
      )
-    declarations = supabase.table("declaration").select("*").execute()
+    declarations = supabase.table("declaration").select("*").neq("reception_douane", "Reçu").execute()
     df = pd.DataFrame(declarations.data)
     st.markdown("### Toutes les déclarations")
     if len(df) > 0:
