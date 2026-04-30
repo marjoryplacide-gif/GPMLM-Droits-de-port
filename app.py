@@ -484,7 +484,6 @@ if st.button(" Calculer et générer la DN", type="primary"):
         st.error("Veuillez renseigner le nombre d'escales.")
     elif longueur == 0:
         st.error(" Aucune caractéristique de navire disponible.")
-
     else:
         te_retenu = calcul_te_retenu(longueur, largeur, tirant_eau)
         volume = calcul_volume(longueur, largeur, te_retenu)
