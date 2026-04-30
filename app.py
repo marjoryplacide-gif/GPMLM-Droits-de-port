@@ -459,6 +459,8 @@ if "resultats" not in st.session_state:
     st.session_state.resultats = None
 if "pdf_buffer" not in st.session_state:
     st.session_state.pdf_buffer = None
+if "data_pdf" not in st.session_state:
+    st.session_state.data_pdf = None
 
 if "longueur" not in dir():
     longueur = 0
