@@ -522,6 +522,20 @@ if st.button(" Calculer et générer la DN", type="primary"):
             "qualite": SIGNATAIRES.get(representant, {}).get("qualite", ""),
             "date_signature": date.today().strftime("%d/%m/%Y")
         }
+        st.session_state.pdf_buffer = generer_pdf(data_pdf)
+        st.session_state.data_pdf = data_pdf
+        st.session_state.resultats = {
+            "volume": volume,
+            "redevance_navire": redevance_navire,
+            "modulation_retenue": modulation_retenue,
+            "montant_percevoir": montant_percevoir,
+            "montant_final": montant_percevoir + 65,
+            "mod_art2": mod_art2,
+            "mod_art3": mod_art3,
+            "nb_escales": nb_escales,
+            "nom_navire": nom_navire
+        }
+
 if st.session_state.resultats:
     r = st.session_state.resultats
     st.success("Calculs effectués avec succès !")
