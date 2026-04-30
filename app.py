@@ -597,7 +597,7 @@ if authentication_status:
         # Vue détaillée pour la douane 
         if 'Reception_douane' in df.columns:
             df = df[df['Reception_douane'] != "Recu"]
-    st.markdown("### Toutes les déclarations")
+    st.markdown("### Déclarations à valider par la douane")
     if len(df) > 0:
         for index, row in df.iterrows():
             with st.expander(f"{row['nom_navire']} - {row['date_entree']}"):
