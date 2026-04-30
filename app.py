@@ -597,7 +597,7 @@ if authentication_status:
                 st.write("**Statut :**", row['statut'])
                 st.write("**Réception douane :**",row.get('Reception_douane', 'En attente'))
                 if username == "douane":
-                   if row.get('Reception_douane', 'En attente') == "En attente":
+                   if row.get('reception_douane') != "Recu":
                         if st.button("Marquer comme reçu", key=f"recu_{index}"):
                             try:
                                 result = supabase.table("declaration").update(
