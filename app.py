@@ -546,8 +546,7 @@ if st.session_state.resultats:
 if st.session_state.get("save_success"):
     st.success("Déclaration sauvegardée avec succès !")
     st.session_state.save_success = False
-    st.session_state.data_pdf = data_pdf
-
+    
 st.markdown("---")
 st.markdown("### Accès administration")
 
