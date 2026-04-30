@@ -578,7 +578,7 @@ if authentication_status:
         st.secrets["SUPABASE_URL"],
         st.secrets["SUPABASE_KEY"]
      )
-    declarations = supabase.table("declaration").select("*").neq("reception_douane", "Reçu").execute()
+    declarations = supabase.table("declaration").select("*").neq("reception_douane", "Recu").execute()
     df = pd.DataFrame(declarations.data)
     st.markdown("### Toutes les déclarations")
     if len(df) > 0:
@@ -598,7 +598,7 @@ if authentication_status:
                    if row.get('reception_douane', 'En attente') == "En attente":
                         if st.button("Marquer comme reçu", key=f"recu_{index}"):
                             supabase.table("declaration").update(
-                                {"reception_douane": "Reçu"}
+                                {"reception_douane": "Recu"}
                             ).eq("id", row['id']).execute()
                             st.rerun()
                         else:
