@@ -580,8 +580,8 @@ if authentication_status:
      )
     declarations = supabase.table("declaration").select("*").execute()
     df = pd.DataFrame(declarations.data)
-    if 'reception_douane' in df.columns:
-        df = df[df['reception_douane'] != "Recu"]
+    if 'Reception_douane' in df.columns:
+        df = df[df['Reception_douane'] != "Recu"]
     st.markdown("### Toutes les déclarations")
     if len(df) > 0:
         for index, row in df.iterrows():
@@ -595,13 +595,13 @@ if authentication_status:
                     st.write("**Total à payer :**",str(row["montant_final"]) + " €")
             with col2:
                 st.write("**Statut :**", row['statut'])
-                st.write("**Réception douane :**",row.get('reception_douane', 'En attente'))
+                st.write("**Réception douane :**",row.get('Reception_douane', 'En attente'))
                 if username == "douane":
-                   if row.get('reception_douane', 'En attente') == "En attente":
+                   if row.get('Reception_douane', 'En attente') == "En attente":
                         if st.button("Marquer comme reçu", key=f"recu_{index}"):
                             try:
                                 result = supabase.table("declaration").update(
-                                    {"reception_douane": "Recu"}
+                                    {"Reception_douane": "Recu"}
                                 ).eq("nom_navire", row['nom_navire']).eq("date_entree", row['date_entree']).execute()
                                 st.write(result)
                                 st.rerun()
