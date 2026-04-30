@@ -586,7 +586,16 @@ if authentication_status:
     declarations = supabase.table("declaration").select("*").execute()
     df = pd.DataFrame(declarations.data)
     df = df.sort_values(by='id', ascending=False)
-    if 'Reception_douane' in df.columns:
+    if username =="port":
+        # Vue tableau complet pour le port 
+        st.markdown("### Toutes les déclarations")
+        if len(df) > 0:
+            st.dataframe(df)
+        else:
+            st.warning("Aucune déclaration pour le moment.")
+    elif username == "douane":
+        # Vue détaillée pour la douane 
+        if 'Reception_douane' in df.columns:
         df = df[df['Reception_douane'] != "Recu"]
     st.markdown("### Toutes les déclarations")
     if len(df) > 0:
