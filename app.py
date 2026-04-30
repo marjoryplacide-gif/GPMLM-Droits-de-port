@@ -599,11 +599,15 @@ if authentication_status:
                 if username == "douane":
                    if row.get('reception_douane', 'En attente') == "En attente":
                         if st.button("Marquer comme reçu", key=f"recu_{index}"):
-                            supabase.table("declaration").update(
-                                {"reception_douane": "Recu"}
-                            ).eq("nom_navire", row['nom_navire']).eq("date_entree", row['date_entree']).execute()
-                            st.rerun()
-                        else:
+                            try:
+                                result = supabase.table("declaration").update(
+                                    {"reception_douane": "Recu"}
+                                ).eq("nom_navire", row['nom_navire']).eq("date_entree", row['date_entree']).execute()
+                                st.write(result)
+                                st.rerun()
+                            except Exception as e:
+                                st.error("Erreur détaillée : " + str(e))
+                        elif username == "port":
                             st.success("Reçu ✓")
         
         st.markdown("### Envoyer un rappel")
