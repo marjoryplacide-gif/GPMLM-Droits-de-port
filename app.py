@@ -610,13 +610,13 @@ if authentication_status:
                     st.write("**Total à payer :**",str(row["montant_final"]) + " €")
             with col2:
                 st.write("**Statut :**", row['statut'])
-                st.write("**Réception douane :**",row.get('Reception_douane', 'En attente de validation'))
+                st.write("**Réception douane :**",row.get('Reception_douane', 'En attente'))
                 if username == "douane":
                    if row.get('reception_douane') != "Recu":
-                        if st.button("Marquer comme reçu", key=f"validation_douane_{index}"):
+                        if st.button("Marquer comme reçu", key=f"reçu_{index}"):
                             try:
                                 result = supabase.table("declaration").update(
-                                    {"Reception_douane": "validation Douane"}
+                                    {"Reception_douane": "reçu"}
                                 ).eq("nom_navire", row['nom_navire']).eq("date_entree", row['date_entree']).execute()
                                 st.write(result)
                                 st.rerun()
