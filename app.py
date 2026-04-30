@@ -613,7 +613,7 @@ if authentication_status:
                 st.write("**Réception douane :**",row.get('Reception_douane', 'En attente de validation'))
                 if username == "douane":
                    if row.get('reception_douane') != "Recu":
-                        if st.button("Marquer comme reçu", key=f"recu_{index}"):
+                        if st.button("Marquer comme reçu", key=f"validation_douane_{index}"):
                             try:
                                 result = supabase.table("declaration").update(
                                     {"Reception_douane": "validation Douane"}
