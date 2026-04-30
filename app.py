@@ -521,19 +521,6 @@ if st.button(" Calculer et générer la DN", type="primary"):
             "qualite": SIGNATAIRES.get(representant, {}).get("qualite", ""),
             "date_signature": date.today().strftime("%d/%m/%Y")
         }
-        sauvegarder_declaration(data_pdf)
-        st.session_state.pdf_buffer = generer_pdf(data_pdf)
-        st.session_state.resultats = {
-            "volume": volume,
-            "redevance_navire": redevance_navire,
-            "modulation_retenue": modulation_retenue,
-            "montant_percevoir": montant_percevoir,
-            "montant_final": montant_percevoir + 65,
-            "mod_art2": mod_art2,
-            "mod_art3": mod_art3,
-            "nb_escales": nb_escales,
-            "nom_navire": nom_navire
-        }
 if st.session_state.resultats:
     r = st.session_state.resultats
     st.success("Calculs effectués avec succès !")
@@ -547,11 +534,14 @@ if st.session_state.resultats:
     col_a.info("Art. 2 : " + str(int(r["mod_art2"]*100)) + "%")
     col_b.info("Art. 3 (escale n° " + str(r["nb_escales"]) + ") : " + str(int(r["mod_art3"]*100)) + "%")
     st.download_button(
-        label="Télécharger la DN (PDF)",
-        data=st.session_state.pdf_buffer,
-        file_name="DN_" + r["nom_navire"] + ".pdf",
-        mime="application/pdf"
-    )
+        if st.download_button(
+    label="Télécharger la DN (PDF)",
+    data=st.session_state.pdf_buffer,
+    file_name="DN_" + r["nom_navire"] + ".pdf",
+    mime="application/pdf"
+):
+    sauvegarder_declaration(st.session_state.data_pdf)
+    
 if st.session_state.get("save_success"):
     st.success("Déclaration sauvegardée avec succès !")
     st.session_state.save_success = False
