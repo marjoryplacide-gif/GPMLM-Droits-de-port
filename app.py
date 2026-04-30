@@ -596,7 +596,7 @@ if authentication_status:
     elif username == "douane":
         # Vue détaillée pour la douane 
         if 'Reception_douane' in df.columns:
-        df = df[df['Reception_douane'] != "Recu"]
+            df = df[df['Reception_douane'] != "Recu"]
     st.markdown("### Toutes les déclarations")
     if len(df) > 0:
         for index, row in df.iterrows():
