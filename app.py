@@ -208,6 +208,37 @@ def generer_pdf(data):
         t.drawOn(c, x, y - th)
         return th
 
+@st.cache_data(ttl=300)
+def charger_escales():
+    url = "https://1drv.ms/x/c/edaa56a25515f89d/IQBMo0e2GrfxRqk-GtGettG5Aaq3JKK2wwFXyB72GwZpLY8?e=Zsrici&download=1"
+    try:
+        df = pd.read_excel(url)
+        return df
+    except Exception as e:
+        st.error("Erreur chargement escales : " + str(e))
+        return None
+
+def calculer_nb_escales(nom_navire, date_entree):
+    try:
+        df_escales = charger_escales()
+        if df_escales is None:
+            return 0
+        
+        # Convertir les dates
+        df_escales["Date d'entrée"] = pd.to_datetime(df_escales["Date d'entrée"], dayfirst=True)
+        date_choisie = pd.to_datetime(date_entree, format="%d/%m/%Y")
+        
+        # Filtrer par navire et par année
+        df_filtre = df_escales[
+            (df_escales["Nom du navire"].str.strip() == nom_navire.strip()) &
+            (df_escales["Date d'entrée"].dt.year == date_choisie.year) &
+            (df_escales["Date d'entrée"] <= date_choisie)
+        ]
+        
+        return len(df_filtre)
+    except Exception as e:
+        return 0
+
     y = H - 10
     c.setFont("Helvetica-Bold", 14)
     c.setFillColor(BLEU_PORT)
@@ -345,8 +376,11 @@ with col2:
     provenance = st.selectbox("Provenance (port d'origine)",[""] + ["MARGUARITA","VENEZUELA","GRENADE", "AUTRE"])
     zone_dn = st.selectbox("Zone DN", ["A (Pointe des Grives)","B (Pointe Simon)","C (Quai de Tourelle)","D (App. rivière Monsieur)","E (Cohé du Lamentin)","F (Bellefontaine)","G (Gare maritime inter-îles)","H (Hydrobase)","I (Quai du Robert)","J (Batellerie)","M (zone de mouillages)","R (quai ro-ro)","Z (autre)"], index =9)
     tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f")
-    nb_escales = st.number_input("Nombre d'escales du navire depuis le début de l'année", min_value=0, step=1)
-
+if nom_navire and date_entree:
+    nb_escales = calculer_nb_escales(nom_navire, date_entree.strftime("%d/%m/%Y"))
+    st.info("Nombre d'escales calculé automatiquement : " + str(nb_escales))
+else:
+    nb_escales = 0
 
 with col1:
     st.header ("Navire")
