@@ -210,7 +210,7 @@ def generer_pdf(data):
 
 @st.cache_data(ttl=300)
 def charger_escales():
-    url = "https://1drv.ms/x/c/8907d6c858e98d7c/IQCHRcSXyhriS7kHcOdwCtDUAT7bqQINWm9q_p7jPWRGN8k?e=HcIaOa&download=1"
+    url = "https://docs.google.com/spreadsheets/d/1nB4-isjQqLCXqRn4cg9xicprc8LYq9lZ0tISqU2Srls/edit?usp=sharing"
     try:
         df = pd.read_excel(url)
         return df
