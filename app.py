@@ -500,11 +500,11 @@ with col1:
         representant = nom_navire = ""
         longueur = largeur = tirant_eau = 0
 # --------------- CALCUL AUTOMATIQUE DU NOMBRES D'ESCALES ---------------------------
-if nom_navire and date_entree:
-                nb_escales = calculer_nb_escales(nom_navire, date_entree.strftime("%d/%m/%Y"))
-                st.info("Nombre d'escales calculé automatiquement : " + str(nb_escales))
-            else:
-                nb_escales = 0
+    if nom_navire and date_entree:
+        nb_escales = calculer_nb_escales(nom_navire, date_entree.strftime("%d/%m/%Y"))
+        st.info("Nombre d'escales calculé automatiquement : " + str(nb_escales))
+    else:
+        nb_escales = 0
 st.markdown("---")
 
 
