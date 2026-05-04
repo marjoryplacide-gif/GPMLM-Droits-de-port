@@ -212,7 +212,7 @@ def generer_pdf(data):
 def charger_escales():
     url = "https://docs.google.com/spreadsheets/d/1nB4-isjQqLCXqRn4cg9xicprc8LYq9lZ0tISqU2Srls/export?format=csv"
     try:
-        df = pd.read_excel(url)
+        df = pd.read_csv(url)
         return df
     except Exception as e:
         st.error("Erreur chargement escales : " + str(e))
