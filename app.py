@@ -505,7 +505,7 @@ with col1:
         if nb_escales == 0:
             st.error("Cette escale n'existe pas. Veuillez vérifier la date.")
         else:
-        st.info("Nombre d'escales calculé automatiquement : " + str(nb_escales))
+            st.info("Nombre d'escales calculé automatiquement : " + str(nb_escales))
     else:
         nb_escales = 0
 st.markdown("---")
