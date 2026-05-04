@@ -376,11 +376,6 @@ with col2:
     provenance = st.selectbox("Provenance (port d'origine)",[""] + ["MARGUARITA","VENEZUELA","GRENADE", "AUTRE"])
     zone_dn = st.selectbox("Zone DN", ["A (Pointe des Grives)","B (Pointe Simon)","C (Quai de Tourelle)","D (App. rivière Monsieur)","E (Cohé du Lamentin)","F (Bellefontaine)","G (Gare maritime inter-îles)","H (Hydrobase)","I (Quai du Robert)","J (Batellerie)","M (zone de mouillages)","R (quai ro-ro)","Z (autre)"], index =9)
     tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f")
-if nom_navire and date_entree:
-    nb_escales = calculer_nb_escales(nom_navire, date_entree.strftime("%d/%m/%Y"))
-    st.info("Nombre d'escales calculé automatiquement : " + str(nb_escales))
-else:
-    nb_escales = 0
 
 with col1:
     st.header ("Navire")
@@ -407,6 +402,11 @@ with col1:
             largeur = carac["largeur"]
             tirant_eau = carac["tirant_eau"]
             st.info("Caractéristiques : L=" + str(longueur) + "m | b=" + str(largeur) + "m | Te=" + str(tirant_eau) + "m")
+            if date_entree:
+                nb_escales = calculer_nb_escales(nom_navire, date_entree.strftime("%d/%m/%Y"))
+                st.info("Nombre d'escales calculé automatiquement : " + str(nb_escales))
+            else:
+                nb_escales = 0
     else:
         st.warning("Aucune donnee de navire disponible.")
         representant = nom_navire = ""
