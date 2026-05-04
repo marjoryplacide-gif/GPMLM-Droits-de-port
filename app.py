@@ -283,7 +283,7 @@ def generer_pdf(data):
     draw_field("Type de navire", data['type_navire'], 9*cm, y, 75, 70)
     y -= 16
     y -= 5
- # ----  SECTION 2 ----------------------------------   
+ # --------------  SECTION 2 ----------------------------------   
     y = draw_section_title("2. Représentant", y)
     y -= 3
     draw_field("Représentant", data['representant'], 1*cm, y, 75, 130)
@@ -502,6 +502,9 @@ with col1:
 # --------------- CALCUL AUTOMATIQUE DU NOMBRES D'ESCALES ---------------------------
     if nom_navire and date_entree:
         nb_escales = calculer_nb_escales(nom_navire, date_entree.strftime("%d/%m/%Y"))
+        if nb_escales == 0:
+            st.error("Cette escale n'existe pas. Veuillez vérifier la date.")
+        else:
         st.info("Nombre d'escales calculé automatiquement : " + str(nb_escales))
     else:
         nb_escales = 0
