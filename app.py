@@ -20,6 +20,8 @@ st.set_page_config(
     layout="wide"
 )
 
+#------ CHARGEMENT NAVIRE-----------------------------------
+
 @st.cache_data
 def charger_navires():
     df = pd.read_excel(
@@ -45,6 +47,39 @@ try:
 except Exception as e:
     st.error(f" Erreur lecture Excel : {e}")
     NAVIRES = {}
+#-------------- FRÉQUENCE DES ESCALES--------------------------------
+@st.cache_data(ttl=300)
+def charger_escales():
+    url = "https://docs.google.com/spreadsheets/d/1nB4-isjQqLCXqRn4cg9xicprc8LYq9lZ0tISqU2Srls/export?format=csv"
+    try:
+        df = pd.read_csv(url)
+        return df
+    except Exception as e:
+        st.error("Erreur chargement escales : " + str(e))
+        return None
+
+def calculer_nb_escales(nom_navire, date_entree):
+    try:
+        df_escales = charger_escales()
+        if df_escales is None:
+            return 0
+        df_escales.columns = df_escales.columns.str.strip()
+        df_escales["Date d'entrée"] = pd.to_datetime(df_escales["Date d'entrée"], dayfirst=True)
+        date_choisie = pd.to_datetime(date_entree, format="%d/%m/%Y")
+        df_filtre = df_escales[
+            (df_escales["Nom du navire"].str.strip() == nom_navire.strip()) &
+            (df_escales["Date d'entrée"].dt.year == date_choisie.year) &
+            (df_escales["Date d'entrée"] <= date_choisie)
+        ]
+        return len(df_filtre)
+    except Exception as e:
+        return 0
+
+
+
+
+
+#----------- INFORMATIONS SUR LES DÉCLARANTS ------------------------------------------
 
 ADRESSES = {
     "DSK Fish": "53 AVENUE DES ARAWAKS, 97200 FORT DE FRANCE",
@@ -80,6 +115,8 @@ credentials = {
         }
     }
 }
+
+#-------------------- SAUVEGARDE------------------------------------------
 def sauvegarder_declaration(data):
     try:
         supabase = create_client(
@@ -107,6 +144,7 @@ def sauvegarder_declaration(data):
     except Exception as e:
         st.error("Erreur sauvegarde : " + str(e))
         return False
+#------------ FONCTION DE CALCUL-------------------
 
 def calcul_te_retenu(longueur, largeur, te_reel):
     te_theorique = 0.14 * (longueur * largeur) ** 0.5
@@ -146,6 +184,9 @@ def calcul_montant_final(redevance, modulation):
     else:
         montant_percevoir = montant_net
     return montant_brut, montant_net, montant_percevoir
+
+
+#----------------- GÉNÉRER LE PDF-------------------------------
 
 def generer_pdf(data):
     BLEU_PORT = colors.HexColor('#1A5276')
@@ -207,39 +248,7 @@ def generer_pdf(data):
         tw, th = t.wrapOn(c, W, H)
         t.drawOn(c, x, y - th)
         return th
-
-@st.cache_data(ttl=300)
-def charger_escales():
-    url = "https://docs.google.com/spreadsheets/d/1nB4-isjQqLCXqRn4cg9xicprc8LYq9lZ0tISqU2Srls/export?format=csv"
-    try:
-        df = pd.read_csv(url)
-        return df
-    except Exception as e:
-        st.error("Erreur chargement escales : " + str(e))
-        return None
-
-def calculer_nb_escales(nom_navire, date_entree):
-    try:
-        df_escales = charger_escales()
-        if df_escales is None:
-            return 0
-        df_escales.columns = df_escales.columns.str.strip()
-        # Convertir les dates
-        df_escales["Date d'entrée"] = pd.to_datetime(df_escales["Date d'entrée"], dayfirst=True)
-        date_choisie = pd.to_datetime(date_entree, format="%d/%m/%Y")
-        
-        # Filtrer par navire et par année
-        df_filtre = df_escales[
-            (df_escales["Nom du navire"].str.strip() == nom_navire.strip()) &
-            (df_escales["Date d'entrée"].dt.year == date_choisie.year) &
-            (df_escales["Date d'entrée"] <= date_choisie)
-        ]
-        
-        return len(df_filtre)
-    except Exception as e:
-        return 0
-
-    y = H - 10
+# --------------- EN TÊTE --------------------------------
     c.setFont("Helvetica-Bold", 14)
     c.setFillColor(BLEU_PORT)
     c.drawCentredString(W/2, H - 35, "DÉCLARATION NAVIRE")
@@ -258,7 +267,7 @@ def calculer_nb_escales(nom_navire, date_entree):
     c.setLineWidth(1.5)
     c.line(1*cm, H - 70, W - 1*cm, H - 70)
     y = H - 78
-
+# --------------- SECTION 1 -------------------------
     y = draw_section_title("1. Identification du navire et de l'escale", y)
     y -= 3
     draw_field("Nom du navire", data['nom_navire'], 1*cm, y, 75, 120)
@@ -274,6 +283,7 @@ def calculer_nb_escales(nom_navire, date_entree):
     draw_field("Type de navire", data['type_navire'], 9*cm, y, 75, 70)
     y -= 16
     y -= 5
+ # ----  SECTION 2 ----------------------------------   
     y = draw_section_title("2. Représentant", y)
     y -= 3
     draw_field("Représentant", data['representant'], 1*cm, y, 75, 130)
@@ -281,12 +291,14 @@ def calculer_nb_escales(nom_navire, date_entree):
     draw_field("Adresse", data['adresse_rep'], 1*cm, y, 50, 380)
     y -= 16
     y -= 5
+    # ---------------------- SECTION 3 ------------------------------
     y = draw_section_title("3. Tonnage des marchandises", y)
     y -= 3
     draw_field("Marchandises diverses", f"{data['tonnage']} t", 1*cm, y, 120, 80)
     draw_field("TOTAL", f"{data['tonnage']} t", 11*cm, y, 40, 80)
     y -= 16
     y -= 5
+    # ----------------------- SECTION 4 -------------------------------
     y = draw_section_title("4. Redevance sur le navire (V335)", y)
     y -= 3
     c.setFont("Helvetica", 7)
@@ -300,6 +312,7 @@ def calculer_nb_escales(nom_navire, date_entree):
     ]
     th = draw_table(nav_data, [3.5*cm, 3*cm, 3*cm, 3.5*cm, 3.5*cm], 1*cm, y)
     y -= (th + 13)
+    # --------------------- SECTION 5 -----------------------------
     y = draw_section_title("5. Modulations et abattements", y)
     y -= 3
     montant_mod = round(data['redevance_navire'] - data['montant_apres_mod'], 2)
@@ -311,6 +324,7 @@ def calculer_nb_escales(nom_navire, date_entree):
 ]
     th = draw_table(mod_data, [10*cm, 3*cm, 3.5*cm], 1*cm, y)
     y -= (th + 13)
+    # -------------------- SECTION 6 -----------------------------------
     y = draw_section_title("6. Liquidation - Redevance sur navire", y)
     y -= 3
     montant_mod_affiche = round(data['redevance_navire'] - data['montant_apres_mod'])
@@ -324,6 +338,7 @@ def calculer_nb_escales(nom_navire, date_entree):
     ]
     th = draw_table(liq_data, [12*cm, 4.5*cm], 1*cm, y, last_row_blue=True)
     y -= (th + 13)
+    #------------------- SECTION 7 -----------------------------------------
     y = draw_section_title("7. Droits de port a percevoir", y)
     y -= 3
     dp_data = [
@@ -334,6 +349,7 @@ def calculer_nb_escales(nom_navire, date_entree):
     ]
     th = draw_table(dp_data, [2.5*cm, 10*cm, 4*cm], 1*cm, y, last_row_blue=True)
     y -= (th + 30)
+    # -------------------- BAS DE PAGE --------------------------
     c.setFont("Helvetica", 8)
     c.setFillColor(colors.black)
     c.drawString(1*cm, y, "Je soussigné(e)")
@@ -359,59 +375,14 @@ def calculer_nb_escales(nom_navire, date_entree):
     c.save()
     buffer.seek(0)
     return buffer
+
+# ------------------ VISUEL DE L'INTERFACE ------------------------- 
 col_logo, col_titre = st.columns([1, 4])
 with col_logo:
     st.image("logo_gpmlm.png", width=150)
 with col_titre:
     st.title("Déclaration des Droits de Port")
     st.subheader("Grand Port Maritime de la Martinique — Navires de pêche")
-st.markdown("---")
-
-col1, col2 = st.columns(2)
-
-with col2:
-    st.header(" Escale")
-    date_entree =  st.date_input("Date d'entrée", value = None, format="DD/MM/YYYY")
-    date_sortie =  st.date_input("Date de sortie", value = None, format="DD/MM/YYYY")
-    provenance = st.selectbox("Provenance (port d'origine)",[""] + ["MARGUARITA","VENEZUELA","GRENADE", "AUTRE"])
-    zone_dn = st.selectbox("Zone DN", ["A (Pointe des Grives)","B (Pointe Simon)","C (Quai de Tourelle)","D (App. rivière Monsieur)","E (Cohé du Lamentin)","F (Bellefontaine)","G (Gare maritime inter-îles)","H (Hydrobase)","I (Quai du Robert)","J (Batellerie)","M (zone de mouillages)","R (quai ro-ro)","Z (autre)"], index =9)
-    tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f")
-
-with col1:
-    st.header ("Navire")
-    if NAVIRES:
-        representant = st.selectbox("Représentant", [""] + list(NAVIRES.keys()))
-        tous_navires = list(set(
-            navire 
-            for compagnie in NAVIRES.values() 
-            for navire in compagnie.keys()
-        ))
-        tous_navires = [""] + sorted(list(set(
-            navire 
-            for compagnie in NAVIRES.values() 
-            for navire in compagnie.keys()
-)))
-        nom_navire = st.selectbox("Nom du navire", tous_navires)
-        if nom_navire:
-            carac = next(
-                NAVIRES[c][nom_navire] 
-                for c in NAVIRES 
-                if nom_navire in NAVIRES[c]
-            )
-            longueur = carac["longueur"]
-            largeur = carac["largeur"]
-            tirant_eau = carac["tirant_eau"]
-            st.info("Caractéristiques : L=" + str(longueur) + "m | b=" + str(largeur) + "m | Te=" + str(tirant_eau) + "m")
-            if date_entree:
-                nb_escales = calculer_nb_escales(nom_navire, date_entree.strftime("%d/%m/%Y"))
-                st.info("Nombre d'escales calculé automatiquement : " + str(nb_escales))
-            else:
-                nb_escales = 0
-    else:
-        st.warning("Aucune donnee de navire disponible.")
-        representant = nom_navire = ""
-        longueur = largeur = tirant_eau = 0
-
 st.markdown("---")
 st.markdown("""
 <style>
@@ -488,6 +459,54 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
+col1, col2 = st.columns(2)
+
+with col2:
+    st.header(" Escale")
+    date_entree =  st.date_input("Date d'entrée", value = None, format="DD/MM/YYYY")
+    date_sortie =  st.date_input("Date de sortie", value = None, format="DD/MM/YYYY")
+    provenance = st.selectbox("Provenance (port d'origine)",[""] + ["MARGUARITA","VENEZUELA","GRENADE", "AUTRE"])
+    zone_dn = st.selectbox("Zone DN", ["A (Pointe des Grives)","B (Pointe Simon)","C (Quai de Tourelle)","D (App. rivière Monsieur)","E (Cohé du Lamentin)","F (Bellefontaine)","G (Gare maritime inter-îles)","H (Hydrobase)","I (Quai du Robert)","J (Batellerie)","M (zone de mouillages)","R (quai ro-ro)","Z (autre)"], index =9)
+    tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f")
+
+with col1:
+    st.header ("Navire")
+    if NAVIRES:
+        representant = st.selectbox("Représentant", [""] + list(NAVIRES.keys()))
+        tous_navires = list(set(
+            navire 
+            for compagnie in NAVIRES.values() 
+            for navire in compagnie.keys()
+        ))
+        tous_navires = [""] + sorted(list(set(
+            navire 
+            for compagnie in NAVIRES.values() 
+            for navire in compagnie.keys()
+)))
+        nom_navire = st.selectbox("Nom du navire", tous_navires)
+        if nom_navire:
+            carac = next(
+                NAVIRES[c][nom_navire] 
+                for c in NAVIRES 
+                if nom_navire in NAVIRES[c]
+            )
+            longueur = carac["longueur"]
+            largeur = carac["largeur"]
+            tirant_eau = carac["tirant_eau"]
+            st.info("Caractéristiques : L=" + str(longueur) + "m | b=" + str(largeur) + "m | Te=" + str(tirant_eau) + "m")
+    else:
+        st.warning("Aucune donnee de navire disponible.")
+        representant = nom_navire = ""
+        longueur = largeur = tirant_eau = 0
+# --------------- CALCUL AUTOMATIQUE DU NOMBRES D'ESCALES ---------------------------
+if nom_navire and date_entree:
+                nb_escales = calculer_nb_escales(nom_navire, date_entree.strftime("%d/%m/%Y"))
+                st.info("Nombre d'escales calculé automatiquement : " + str(nb_escales))
+            else:
+                nb_escales = 0
+st.markdown("---")
+
 
 if "resultats" not in st.session_state:
     st.session_state.resultats = None
