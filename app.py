@@ -582,14 +582,14 @@ if st.session_state.resultats:
     col_a, col_b = st.columns(2)
     col_a.info("Art. 2 : " + str(int(r["mod_art2"]*100)) + "%")
     col_b.info("Art. 3 (escale n° " + str(r["nb_escales"]) + ") : " + str(int(r["mod_art3"]*100)) + "%")
- if st.session_state.pdf_buffer is not None:   
-    if st.download_button(
-        label="Télécharger la DN (PDF)",
-        data=st.session_state.pdf_buffer,
-        file_name="DN_" + r["nom_navire"] + ".pdf",
-        mime="application/pdf"
-    ):
-        sauvegarder_declaration(st.session_state.data_pdf)
+    if st.session_state.pdf_buffer is not None:   
+        if st.download_button(
+            label="Télécharger la DN (PDF)",
+            data=st.session_state.pdf_buffer,
+            file_name="DN_" + r["nom_navire"] + ".pdf",
+            mime="application/pdf"
+        ):
+            sauvegarder_declaration(st.session_state.data_pdf)
     
 if st.session_state.get("save_success"):
     st.success("Déclaration sauvegardée avec succès !")
