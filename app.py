@@ -223,7 +223,7 @@ def calculer_nb_escales(nom_navire, date_entree):
         df_escales = charger_escales()
         if df_escales is None:
             return 0
-        
+        df_escales.columns = df_escales.columns.str.strip()
         # Convertir les dates
         df_escales["Date d'entrée"] = pd.to_datetime(df_escales["Date d'entrée"], dayfirst=True)
         date_choisie = pd.to_datetime(date_entree, format="%d/%m/%Y")
