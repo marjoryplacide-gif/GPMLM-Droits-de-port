@@ -464,16 +464,16 @@ col1, col2 = st.columns(2)
 
 with col2:
     st.header(" Escale")
-    date_entree =  st.date_input("Date d'entrée", value = None, format="DD/MM/YYYY")
-    date_sortie =  st.date_input("Date de sortie", value = None, format="DD/MM/YYYY")
-    provenance = st.selectbox("Provenance (port d'origine)",[""] + ["MARGUARITA","VENEZUELA","GRENADE", "AUTRE"])
-    zone_dn = st.selectbox("Zone DN", ["A (Pointe des Grives)","B (Pointe Simon)","C (Quai de Tourelle)","D (App. rivière Monsieur)","E (Cohé du Lamentin)","F (Bellefontaine)","G (Gare maritime inter-îles)","H (Hydrobase)","I (Quai du Robert)","J (Batellerie)","M (zone de mouillages)","R (quai ro-ro)","Z (autre)"], index =9)
-    tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f")
+    date_entree =  st.date_input("Date d'entrée", value = None, format="DD/MM/YYYY", key=str(st.session_state.form_key) + "_de")
+    date_sortie =  st.date_input("Date de sortie", value = None, format="DD/MM/YYYY", key=str(st.session_state.form_key) + "_ds")
+    provenance = st.selectbox("Provenance (port d'origine)",[""] + ["MARGUARITA","VENEZUELA","GRENADE", "AUTRE"], key=str(st.session_state.form_key) + "_prov")
+    zone_dn = st.selectbox("Zone DN", ["A (Pointe des Grives)","B (Pointe Simon)","C (Quai de Tourelle)","D (App. rivière Monsieur)","E (Cohé du Lamentin)","F (Bellefontaine)","G (Gare maritime inter-îles)","H (Hydrobase)","I (Quai du Robert)","J (Batellerie)","M (zone de mouillages)","R (quai ro-ro)","Z (autre)"], index =9, key=str(st.session_state.form_key) + "_zone")
+    tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f", key=str(st.session_state.form_key) + "_ton")
 
 with col1:
     st.header ("Navire")
     if NAVIRES:
-        representant = st.selectbox("Représentant", [""] + list(NAVIRES.keys()))
+        representant = st.selectbox("Représentant", [""] + list(NAVIRES.keys()), key=str(st.session_state.form_key) + "_rep")
         tous_navires = list(set(
             navire 
             for compagnie in NAVIRES.values() 
@@ -484,7 +484,7 @@ with col1:
             for compagnie in NAVIRES.values() 
             for navire in compagnie.keys()
 )))
-        nom_navire = st.selectbox("Nom du navire", tous_navires)
+        nom_navire = st.selectbox("Nom du navire", tous_navires, key=str(st.session_state.form_key) + "_nav")
         if nom_navire:
             carac = next(
                 NAVIRES[c][nom_navire] 
@@ -517,6 +517,9 @@ if "pdf_buffer" not in st.session_state:
     st.session_state.pdf_buffer = None
 if "data_pdf" not in st.session_state:
     st.session_state.data_pdf = None
+if "form_key" not in st.session_state:
+    st.session_state.form_key = 0
+    
 
 if "longueur" not in dir():
     longueur = 0
@@ -615,6 +618,7 @@ if st.session_state.resultats:
             st.session_state.resultats = None
             st.session_state.pdf_buffer = None
             st.session_state.data_pdf = None
+            st.session_state.form_key += 1
             st.rerun()
     
 if st.session_state.get("save_success"):
