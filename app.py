@@ -612,6 +612,10 @@ if st.session_state.resultats:
             mime="application/pdf"
         ):
             sauvegarder_declaration(st.session_state.data_pdf)
+            st.session_state.resultats = None
+            st.session_state.pdf_buffer = None
+            st.session_state.data_pdf = None
+            st.rerun()
     
 if st.session_state.get("save_success"):
     st.success("Déclaration sauvegardée avec succès !")
