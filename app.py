@@ -527,11 +527,11 @@ with col1:
     if nom_navire and date_entree:
         date_valide = verifier_date_escale(nom_navire, date_entree.strftime("%d/%m/%Y"))
         if not date_valide:
-            st.error("Cette escale n'existe pas. Veuillez verifier la date.")
+            st.error("Cette escale n'existe pas. Veuillez vérifier la date.")
             nb_escales = 0
         else:
             nb_escales = calculer_nb_escales(nom_navire, date_entree.strftime("%d/%m/%Y"))
-            st.info("Nombre d'escales calcule automatiquement : " + str(nb_escales))
+            st.info("Nombre d'escales depuis Janvier : " + str(nb_escales))
     else:
         nb_escales = 0
 
