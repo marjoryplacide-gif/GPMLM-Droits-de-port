@@ -460,6 +460,15 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+if "resultats" not in st.session_state:
+    st.session_state.resultats = None
+if "pdf_buffer" not in st.session_state:
+    st.session_state.pdf_buffer = None
+if "data_pdf" not in st.session_state:
+    st.session_state.data_pdf = None
+if "form_key" not in st.session_state:
+    st.session_state.form_key = 0
+
 col1, col2 = st.columns(2)
 
 with col2:
@@ -511,15 +520,6 @@ with col1:
 st.markdown("---")
 
 
-if "resultats" not in st.session_state:
-    st.session_state.resultats = None
-if "pdf_buffer" not in st.session_state:
-    st.session_state.pdf_buffer = None
-if "data_pdf" not in st.session_state:
-    st.session_state.data_pdf = None
-if "form_key" not in st.session_state:
-    st.session_state.form_key = 0
-    
 
 if "longueur" not in dir():
     longueur = 0
