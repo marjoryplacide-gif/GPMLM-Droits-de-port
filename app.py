@@ -48,7 +48,7 @@ except Exception as e:
     st.error(f" Erreur lecture Excel : {e}")
     NAVIRES = {}
 #-------------- FRÉQUENCE DES ESCALES--------------------------------
-@st.cache_data(ttl=60)
+@st.cache_data(ttl=300)
 def charger_escales():
     url = "https://docs.google.com/spreadsheets/d/1nB4-isjQqLCXqRn4cg9xicprc8LYq9lZ0tISqU2Srls/export?format=csv"
     try:
@@ -64,6 +64,10 @@ def calculer_nb_escales(nom_navire, date_entree):
         if df_escales is None:
             return 0
         df_escales.columns = df_escales.columns.str.strip()
+        col_date = [c for c in df_escales.columns if "date" in c.lower() and "entr" in c.lower()][0]
+        col_navire = [c for c in df_escales.columns if "navire" in c.lower()][0]
+        st.write("Date brute dans fichier :", df_escales[col_date].iloc[0])
+        st.write("Date cherchee :", date_entree)
         df_escales["Date d'entrée"] = pd.to_datetime(df_escales["Date d'entrée"], dayfirst=True)
         date_choisie = pd.to_datetime(date_entree, format="%d/%m/%Y")
         df_filtre = df_escales[
