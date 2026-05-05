@@ -527,7 +527,7 @@ with col1:
     if nom_navire and date_entree:
         date_valide = verifier_date_escale(nom_navire, date_entree.strftime("%d/%m/%Y"))
         if not date_valide:
-            st.error("Cette escale n'existe pas dans le registre de la capitainerie. Veuillez verifier la date et le nom du navire.")
+            st.error("Cette escale n'existe pas. Veuillez verifier la date.")
             nb_escales = 0
         else:
             nb_escales = calculer_nb_escales(nom_navire, date_entree.strftime("%d/%m/%Y"))
