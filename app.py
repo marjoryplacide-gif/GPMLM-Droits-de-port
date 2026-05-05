@@ -48,7 +48,7 @@ except Exception as e:
     st.error(f" Erreur lecture Excel : {e}")
     NAVIRES = {}
 #-------------- FRÉQUENCE DES ESCALES--------------------------------
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=60)
 def charger_escales():
     url = "https://docs.google.com/spreadsheets/d/1nB4-isjQqLCXqRn4cg9xicprc8LYq9lZ0tISqU2Srls/export?format=csv"
     try:
