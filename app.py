@@ -75,6 +75,21 @@ def calculer_nb_escales(nom_navire, date_entree):
     except Exception as e:
         return 0
 
+def verifier_date_escale(nom_navire, date_entree):
+    try:
+        df_escales = charger_escales()
+        if df_escales is None:
+            return False
+        df_escales.columns = df_escales.columns.str.strip()
+        df_escales["Date d'entree"] = pd.to_datetime(df_escales["Date d'entree"], dayfirst=True, errors='coerce')
+        date_choisie = pd.to_datetime(date_entree, format="%d/%m/%Y")
+        df_filtre = df_escales[
+            (df_escales["Nom du navire"].str.strip() == nom_navire.strip()) &
+            (df_escales["Date d'entree"].dt.date == date_choisie.date())
+        ]
+        return len(df_filtre) > 0
+    except:
+        return False
 
 
 
@@ -510,13 +525,16 @@ with col1:
         longueur = largeur = tirant_eau = 0
 # --------------- CALCUL AUTOMATIQUE DU NOMBRES D'ESCALES ---------------------------
     if nom_navire and date_entree:
-        nb_escales = calculer_nb_escales(nom_navire, date_entree.strftime("%d/%m/%Y"))
-        if nb_escales == 0:
-            st.error("Cette escale n'existe pas. Veuillez vérifier la date.")
+        date_valide = verifier_date_escale(nom_navire, date_entree.strftime("%d/%m/%Y"))
+        if not date_valide:
+            st.error("Cette escale n'existe pas dans le registre de la capitainerie. Veuillez verifier la date et le nom du navire.")
+            nb_escales = 0
         else:
-            st.info("Nombre d'escales calculé automatiquement : " + str(nb_escales))
+            nb_escales = calculer_nb_escales(nom_navire, date_entree.strftime("%d/%m/%Y"))
+            st.info("Nombre d'escales calcule automatiquement : " + str(nb_escales))
     else:
         nb_escales = 0
+
 st.markdown("---")
 
 
