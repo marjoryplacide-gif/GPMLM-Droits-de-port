@@ -50,7 +50,7 @@ except Exception as e:
 #-------------- FRÉQUENCE DES ESCALES--------------------------------
 @st.cache_data(ttl=300)
 def charger_escales():
-    url = "https://docs.google.com/spreadsheets/d/1nB4-isjQqLCXqRn4cg9xicprc8LYq9lZ0tISqU2Srls/edit?usp=sharing"
+    url = "https://docs.google.com/spreadsheets/d/1nB4-isjQqLCXqRn4cg9xicprc8LYq9lZ0tISqU2Srls/export?format=csv"
     try:
         df = pd.read_csv(url)
         return df
