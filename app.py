@@ -308,8 +308,6 @@ def generer_pdf(data):
     largeur_adresse = min(len(adresse) * 5, 380)
     draw_field("Adresse", adresse, 1*cm, y, 50, largeur_adresse)
     y -= 16
-    draw_field("Adresse", data['adresse_rep'], 1*cm, y, 50, 380)
-    y -= 16
     y -= 5
     # ---------------------- SECTION 3 ------------------------------
     y = draw_section_title("3. Tonnage des marchandises", y)
