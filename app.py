@@ -81,15 +81,11 @@ def verifier_date_escale(nom_navire, date_entree):
         if df_escales is None:
             return False
         df_escales.columns = df_escales.columns.str.strip()
-        df_escales[col_date] = pd.to_datetime(df_escales[col_date], format="%d/%m/%Y", errors='coerce')
+        df_escales["Date d'entree"] = pd.to_datetime(df_escales["Date d'entree"], dayfirst=True, errors='coerce')
         date_choisie = pd.to_datetime(date_entree, format="%d/%m/%Y")
         df_filtre = df_escales[
-            (df_escales[col_navire].str.strip().str.upper() == nom_navire.strip().upper()) &
-            (df_escales[col_date].dt.date == date_choisie.date())
-            st.write("Date brute dans fichier :", df_escales[col_date].iloc[0])
-            st.write("Date cherchee :", date_entree)
-            st.write("Navires dans fichier :", df_escales[col_navire].unique().tolist())
-            st.write("Dates dans fichier :", df_escales[col_date].unique().tolist())
+            (df_escales["Nom du navire"].str.strip() == nom_navire.strip()) &
+            (df_escales["Date d'entree"].dt.date == date_choisie.date())
         ]
         return len(df_filtre) > 0
     except:
