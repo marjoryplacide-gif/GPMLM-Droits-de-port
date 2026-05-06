@@ -304,9 +304,11 @@ def generer_pdf(data):
  # --------------  SECTION 2 ----------------------------------   
     y = draw_section_title("2. Représentant", y)
     y -= 3
-    draw_field("Représentant", data['representant'], 1*cm, y, 75, 130)
+    adresse = data['adresse_rep']
+    largeur_adresse = min(len(adresse) * 5, 380)
+    draw_field("Adresse", adresse, 1*cm, y, 50, largeur_adresse)
     y -= 16
-    draw_field("Adresse", data['adresse_rep'], 1*cm, y, 40, 380)
+    draw_field("Adresse", data['adresse_rep'], 1*cm, y, 50, 380)
     y -= 16
     y -= 5
     # ---------------------- SECTION 3 ------------------------------
