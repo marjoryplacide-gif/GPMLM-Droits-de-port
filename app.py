@@ -648,7 +648,6 @@ if st.session_state.get("save_success"):
     
 st.markdown("---")
 st.markdown("### Accès administration")
-
 authenticator = stauth.Authenticate(
     credentials,
     "gpmlm_cookie",
@@ -661,69 +660,63 @@ authentication_status = st.session_state.get("authentication_status")
 username = st.session_state.get("username")
 
 if authentication_status:
-    st.success(f"Connecté en tant que {name}")
+    st.success("Connecté en tant que " + str(name))
     authenticator.logout("Déconnexion", "main")
     
     supabase = create_client(
         st.secrets["SUPABASE_URL"],
         st.secrets["SUPABASE_KEY"]
-     )
+    )
     declarations = supabase.table("declaration").select("*").execute()
     df = pd.DataFrame(declarations.data)
     if 'id' in df.columns:
         df = df.sort_values(by='id', ascending=False)
-    if username =="port":
-        # Vue tableau complet pour le port 
+
+    if username == "port":
         st.markdown("### Toutes les déclarations")
         if len(df) > 0:
             st.dataframe(df)
+            st.markdown("### Envoyer un rappel")
+            representant_rappel = st.selectbox("Choisir le représentant", list(EMAILS.keys()))
+            date_rappel = st.text_input("Date concernée", placeholder="Ex: 28/04/2026")
+            email_dest = EMAILS.get(representant_rappel, "")
+            sujet = "Rappel - Declaration de navire en attente - " + date_rappel
+            message = "Bonjour,%0A%0ANous vous rappelons que votre declaration de navire pour l'escale du " + date_rappel + " n'a pas encore ete soumise.%0A%0AMerci de bien vouloir la soumettre dans les plus brefs delais.%0A%0ACordialement,%0A Le Grand Port Maritime de la Martinique"
+            lien_mail = "mailto:" + email_dest + "?subject=" + sujet + "&body=" + message
+            st.markdown('<a href="' + lien_mail + '" target="_blank" style="background-color:#1A5276;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;">Envoyer un rappel</a>', unsafe_allow_html=True)
         else:
             st.warning("Aucune déclaration pour le moment.")
+
     elif username == "douane":
-        # Vue détaillée pour la douane 
-        if 'Reception_douane' in df.columns:
-            df = df[df['Reception_douane'] != "Validée"]
-    st.markdown("### Déclarations à valider par la douane")
-    if len(df) > 0:
-        for index, row in df.iterrows():
-            with st.expander(f"{row['nom_navire']} - {row['date_entree']}"):
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.write("**Représentant :**", row['representant'])
-                    st.write("**Provenance :**", row['provenance'])
-                    st.write("**Volume Taxable :**", str(row['volume'])+ " m3")
-                    st.write("**Montant à percevoir :**", str(row['montant_percevoir']) + " €")
-                    st.write("**Total à payer :**",str(row["montant_final"]) + " €")
-            with col2:
-                st.write("**Statut :**", row['statut'])
-                st.write("**Réception douane :**",row.get('Reception_douane', 'En attente'))
-                if username == "douane":
-                   if row.get('reception_douane') != "Validée":
-                        if st.button("Marquer comme reçu", key=f"reçu_{index}"):
-                            try:
-                                result = supabase.table("declaration").update(
-                                    {"Reception_douane": "Validée"}
-                                ).eq("nom_navire", row['nom_navire']).eq("date_entree", row['date_entree']).execute()
-                                st.write(result)
-                                st.rerun()
-                            except Exception as e:
-                                st.error("Erreur détaillée : " + str(e))
-                        elif username == "port":
-                            st.success("Reçu ✓")
-        
-        st.markdown("### Envoyer un rappel")
-        representant_rappel = st.selectbox(
-            "Choisir le représentant",
-            list(EMAILS.keys())
-        )
-        date_rappel = st.text_input("Date concernée", placeholder="Ex: 28/04/2026")
+        if 'reception_douane' in df.columns:
+            df = df[df['reception_douane'] != "Validée"]
+        st.markdown("### Déclarations à valider")
+        if len(df) > 0:
+            for index, row in df.iterrows():
+                with st.expander(str(row['nom_navire']) + " - " + str(row['date_entree'])):
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.write("**Représentant :**", row['representant'])
+                        st.write("**Provenance :**", row['provenance'])
+                        st.write("**Volume Taxable :**", str(row['volume']) + " m3")
+                        st.write("**Montant à percevoir :**", str(row['montant_percevoir']) + " euros")
+                        st.write("**Total à payer :**", str(row.get('montant_final', '')) + " euros")
+                    with col2:
+                        st.write("**Statut :**", row['statut'])
+                        st.write("**Réception douane :**", row.get('reception_douane', 'En attente'))
+                        if row.get('reception_douane') != "Validée":
+                            if st.button("Marquer comme reçu", key="recu_" + str(index)):
+                                try:
+                                    supabase.table("declaration").update(
+                                        {"reception_douane": "Validée"}
+                                    ).eq("nom_navire", row['nom_navire']).eq("date_entree", row['date_entree']).execute()
+                                    st.rerun()
+                                except Exception as e:
+                                    st.error("Erreur : " + str(e))
+        else:
+            st.warning("Aucune déclaration en attente.")
 
-        email_dest = EMAILS.get(representant_rappel, "")
-        sujet = f"Rappel - Déclaration de navire en attente - {date_rappel}"
-        message = f"Bonjour,%0A%0ANous vous rappelons que votre déclaration de navire pour l'escale du {date_rappel} n'a pas encore été soumise.%0A%0AMerci de bien vouloir la soumettre dans les plus brefs délais.%0A%0ACordialement,%0A Le Grand Port Maritime de la Martinique"
-
-        lien_mail = f"mailto:{email_dest}?subject={sujet}&body={message}"
-        st.markdown(f'<a href="{lien_mail}" target="_blank" style="background-color:#1A5276;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;">Envoyer un rappel</a>', unsafe_allow_html=True)
-    else:
-        st.warning("Aucune déclaration pour le moment.")
-
+elif authentication_status == False:
+    st.error("Identifiant ou mot de passe incorrect.")
+elif authentication_status is None:
+    st.info("Veuillez vous connecter.")
