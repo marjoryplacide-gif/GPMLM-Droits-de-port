@@ -670,7 +670,8 @@ if authentication_status:
      )
     declarations = supabase.table("declaration").select("*").execute()
     df = pd.DataFrame(declarations.data)
-    df = df.sort_values(by='id', ascending=False)
+    if 'id' in df.columns:
+        df = df.sort_values(by='id', ascending=False)
     if username =="port":
         # Vue tableau complet pour le port 
         st.markdown("### Toutes les déclarations")
