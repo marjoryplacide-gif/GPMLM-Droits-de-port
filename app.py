@@ -688,8 +688,8 @@ if authentication_status:
             st.warning("Aucune déclaration pour le moment.")
 
     elif username == "douane":
-        if 'reception_douane' in df.columns:
-            df = df[df['reception_douane'] != "Validée"]
+        if 'Reception_douane' in df.columns:
+            df = df[df['Reception_douane'] != "Validée"]
         st.markdown("### Déclarations à valider")
         if len(df) > 0:
             for index, row in df.iterrows():
@@ -703,12 +703,12 @@ if authentication_status:
                         st.write("**Total à payer :**", str(row.get('montant_final', '')) + " euros")
                     with col2:
                         st.write("**Statut :**", row['statut'])
-                        st.write("**Réception douane :**", row.get('reception_douane', 'En attente'))
-                        if row.get('reception_douane') != "Validée":
+                        st.write("**Réception douane :**", row.get('Reception_douane', 'En attente'))
+                        if row.get('Reception_douane') != "Validée":
                             if st.button("Marquer comme reçu", key="recu_" + str(index)):
                                 try:
                                     supabase.table("declaration").update(
-                                        {"reception_douane": "Validée"}
+                                        {"Reception_douane": "Validée"}
                                     ).eq("nom_navire", row['nom_navire']).eq("date_entree", row['date_entree']).execute()
                                     st.rerun()
                                 except Exception as e:
