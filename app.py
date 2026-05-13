@@ -156,6 +156,7 @@ def sauvegarder_declaration(data):
             "montant_percevoir": int(data["montant_percevoir"]),
             "montant_final": int(data["montant_percevoir"]) + 65,
             "statut": "Terminée"
+            "date_telechargement": date.today().strftime("%d/%m/%Y %H:%M"),
         }).execute()
         st.session_state.save_success = True
         return True
@@ -707,6 +708,7 @@ if authentication_status:
                         if row.get('Reception_douane') != "Validée":
                             if st.button("Marquer comme reçu", key="recu_" + str(index)):
                                 try:
+                                    from datetime import datetime
                                     supabase.table("declaration").update(
                                         {"Reception_douane": "Validée"}
                                     ).eq("nom_navire", row['nom_navire']).eq("date_entree", row['date_entree']).execute()
