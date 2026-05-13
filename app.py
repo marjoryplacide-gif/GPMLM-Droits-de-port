@@ -114,7 +114,7 @@ EMAILS = {
     "Poissonnerie Bapte": "",
     "Delta Transit": "",
 }
-
+#CHANGEMENT P
 TAUX_ENTREE = 0.366
 REDEVANCE_DECHETS = 65
 SEUIL_PERCEPTION = 9
