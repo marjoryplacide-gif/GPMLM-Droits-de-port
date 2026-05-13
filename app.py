@@ -11,7 +11,7 @@ import math
 import openpyxl
 from supabase import create_client
 import streamlit_authenticator as stauth
-from datetime import date, datetime 
+from datetime import date 
 
     
 st.set_page_config(
@@ -155,8 +155,7 @@ def sauvegarder_declaration(data):
             "montant_net": int(data["montant_net"]),
             "montant_percevoir": int(data["montant_percevoir"]),
             "montant_final": int(data["montant_percevoir"]) + 65,
-            "statut": "Terminée",
-            "date_telechargement": date.today().strftime("%d/%m/%Y %H:%M"),
+            "statut": "Terminée"
         }).execute()
         st.session_state.save_success = True
         return True
@@ -709,7 +708,7 @@ if authentication_status:
                             if st.button("Marquer comme reçu", key="recu_" + str(index)):
                                 try:
                                     supabase.table("declaration").update(
-                                        {"Reception_douane": "Validée", "date_validation_douane": datetime.now().strftime("%d/%m/%Y %H:%M")}
+                                        {"Reception_douane": "Validée"}
                                     ).eq("nom_navire", row['nom_navire']).eq("date_entree", row['date_entree']).execute()
                                     st.rerun()
                                 except Exception as e:
