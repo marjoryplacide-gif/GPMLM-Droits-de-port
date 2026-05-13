@@ -84,7 +84,6 @@ def verifier_date_escale(nom_navire, date_entree):
         col_date = [c for c in df_escales.columns if "date" in c.lower() and "entr" in c.lower()][0]
         col_navire = [c for c in df_escales.columns if "navire" in c.lower()][0]
         df_escales[col_date] = pd.to_datetime(df_escales[col_date], format="%d/%m/%Y", errors='coerce')
-        date_choisie = pd.to_datetime(date_entree, format="%d/%m/%Y")
         df_filtre = df_escales[
             (df_escales[col_navire].str.strip().str.upper() == nom_navire.strip().upper()) &
             (df_escales[col_date].dt.date == date_choisie.date())
