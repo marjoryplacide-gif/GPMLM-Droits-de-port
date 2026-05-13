@@ -156,7 +156,7 @@ def sauvegarder_declaration(data):
             "montant_net": int(data["montant_net"]),
             "montant_percevoir": int(data["montant_percevoir"]),
             "montant_final": int(data["montant_percevoir"]) + 65,
-            "statut": "Terminée"
+            "statut": "Terminée",
             "date_telechargement": date.today().strftime("%d/%m/%Y %H:%M"),
         }).execute()
         st.session_state.save_success = True
