@@ -710,7 +710,7 @@ if authentication_status:
                                 try:
                                     from datetime import datetime
                                     supabase.table("declaration").update(
-                                        {"Reception_douane": "Validée"}
+                                        {"Reception_douane": "Validée", "date_validation_douane": datetime.now().strftime("%d/%m/%Y %H:%M")}
                                     ).eq("nom_navire", row['nom_navire']).eq("date_entree", row['date_entree']).execute()
                                     st.rerun()
                                 except Exception as e:
