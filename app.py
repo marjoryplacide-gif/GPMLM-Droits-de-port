@@ -12,6 +12,7 @@ import openpyxl
 from supabase import create_client
 import streamlit_authenticator as stauth
 from datetime import date
+from datetime import datetime 
 
     
 st.set_page_config(
@@ -708,7 +709,6 @@ if authentication_status:
                         if row.get('Reception_douane') != "Validée":
                             if st.button("Marquer comme reçu", key="recu_" + str(index)):
                                 try:
-                                    from datetime import datetime
                                     supabase.table("declaration").update(
                                         {"Reception_douane": "Validée", "date_validation_douane": datetime.now().strftime("%d/%m/%Y %H:%M")}
                                     ).eq("nom_navire", row['nom_navire']).eq("date_entree", row['date_entree']).execute()
