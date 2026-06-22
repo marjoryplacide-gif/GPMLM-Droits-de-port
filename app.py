@@ -372,7 +372,7 @@ def generer_pdf(data):
     c.setFillColor(colors.black)
     c.drawString(1*cm, y, "Je soussigné(e)")
     c.drawString(3.8*cm, y, data['signataire'])
-    y -= 20
+    y -= 50
     if data['representant'] == "DSK Fish":
         c.drawString(1*cm, y, "Qualité")
         c.drawString(2.5*cm, y, data['qualite'])
