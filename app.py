@@ -415,14 +415,14 @@ def generer_page_garde(data):
     c.setFont("Helvetica", 10)
     c.setFillColor(colors.black)
     c.drawCentredString(W/2, y, "Période du " + data['date_debut'] + " au " + data['date_fin'])
-    y -= 40
+    y -= 60
 
     c.setFillColor(BLEU_PORT)
     c.rect(1*cm, y - 14, W - 2*cm, 14, fill=1, stroke=0)
     c.setFillColor(colors.white)
     c.setFont("Helvetica-Bold", 9)
     c.drawString(1.3*cm, y - 11, "RÉCAPITULATIF DES DROITS DE PORT")
-    y -= 50
+    y -= 20
 
     table_data = [
         ["Code", "Libellé", "Montant (euros)"],
