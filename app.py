@@ -422,7 +422,7 @@ def generer_page_garde(data):
     c.setFillColor(colors.white)
     c.setFont("Helvetica-Bold", 9)
     c.drawString(1.3*cm, y - 11, "RÉCAPITULATIF DES DROITS DE PORT")
-    y -= 20
+    y -= 50
 
     table_data = [
         ["Code", "Libellé", "Montant (euros)"],
