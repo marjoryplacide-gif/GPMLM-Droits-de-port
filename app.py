@@ -406,7 +406,7 @@ def generer_page_garde(data):
     c = canvas.Canvas(buffer, pagesize=A4)
 
     y = H - 100
-    c.setFont("Helvetica-Bold", 20)
+    c.setFont("Helvetica-Bold", 25)
     c.setFillColor(BLEU_PORT)
     c.drawCentredString(W/2, y, data['representant'].upper())
     y -= 25
@@ -454,7 +454,7 @@ def generer_page_garde(data):
     c.setFont("Helvetica", 9)
     c.setFillColor(colors.black)
     c.drawString(1*cm, y, "Nombre de déclarations sur la période : " + str(data['nb_declarations']))
-    y -= 110
+    y -= 100
 
     from reportlab.lib.utils import simpleSplit
     c.setFont("Helvetica", 9)
