@@ -415,7 +415,7 @@ def generer_page_garde(data):
     c.setFont("Helvetica", 10)
     c.setFillColor(colors.black)
     c.drawCentredString(W/2, y, "Période du " + data['date_debut'] + " au " + data['date_fin'])
-    y -= 60
+    y -= 100
 
     c.setFillColor(BLEU_PORT)
     c.rect(1*cm, y - 14, W - 2*cm, 14, fill=1, stroke=0)
