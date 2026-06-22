@@ -393,7 +393,7 @@ def generer_pdf(data):
     c.save()
     buffer.seek(0)
     return buffer
-
+# ------------------------------- PAGE DE GARDE ---------------------------------------
 def generer_page_garde(data):
     BLEU_PORT = colors.HexColor('#1A5276')
     BLEU_CLAIR = colors.HexColor('#2E86C1')
@@ -404,13 +404,7 @@ def generer_page_garde(data):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=A4)
 
-    try:
-        c.drawImage("logo_gpmlm.png", 1*cm, H - 65, width=100, height=55,
-                    preserveAspectRatio=True, mask='auto')
-    except:
-        pass
-
-    y = H - 90
+    y = H - 220
     c.setFont("Helvetica-Bold", 16)
     c.setFillColor(BLEU_PORT)
     c.drawCentredString(W/2, y, data['representant'].upper())
@@ -431,10 +425,10 @@ def generer_page_garde(data):
     y -= 20
 
     table_data = [
-        ["Code", "Libelle", "Montant (euros)"],
-        ["V335", "Redevance navire", str(data['total_v335']) + " euros"],
-        ["V365", "Redevance déchets d'exploitation", str(data['total_v365']) + " euros"],
-        ["", "TOTAL GÉNÉRAL", str(data['total_general']) + " euros"],
+        ["Code", "Libellé", "Montant (euros)"],
+        ["V335", "Redevance navire", str(data['total_v335']) + "€"],
+        ["V365", "Redevance déchets d'exploitation", str(data['total_v365']) + "€"],
+        ["", "TOTAL GÉNÉRAL", str(data['total_general']) + "€"],
     ]
     t = Table(table_data, colWidths=[3*cm, 9.5*cm, 5*cm])
     style = [
@@ -458,7 +452,7 @@ def generer_page_garde(data):
 
     c.setFont("Helvetica", 9)
     c.setFillColor(colors.black)
-    c.drawString(1*cm, y, "Nombre de declarations sur la période : " + str(data['nb_declarations']))
+    c.drawString(1*cm, y, "Nombre de déclarations sur la période : " + str(data['nb_declarations']))
     y -= 40
 
     from reportlab.lib.utils import simpleSplit
@@ -471,7 +465,7 @@ def generer_page_garde(data):
         y -= 14
 
     y -= 20
-    c.drawString(1*cm, y, "A Fort de France, le " + data['date_signature'])
+    c.drawString(1*cm, y, "À Fort de France, le " + data['date_signature'])
     c.drawString(13*cm, y, "Signature :")
     c.rect(15*cm, y - 25, 3*cm, 30, fill=0, stroke=1)
 
@@ -741,39 +735,39 @@ if st.session_state.get("save_success"):
 
 
 st.markdown("---")
-st.markdown("## Page de garde - Recapitulatif periodique")
+st.markdown("## Page de garde - Récapitulatif périodique")
 
 col_pg1, col_pg2 = st.columns(2)
 with col_pg1:
-    representant_pg = st.selectbox("Representant", [""] + list(NAVIRES.keys()), key="pg_rep")
+    representant_pg = st.selectbox("Représentant", [""] + list(NAVIRES.keys()), key="pg_rep")
 with col_pg2:
     st.write("")
 
 col_pg3, col_pg4 = st.columns(2)
 with col_pg3:
-    date_debut_pg = st.date_input("Date de debut de periode", value=None, format="DD/MM/YYYY", key="pg_debut")
+    date_debut_pg = st.date_input("Date de debut de période", value=None, format="DD/MM/YYYY", key="pg_debut")
 with col_pg4:
-    date_fin_pg = st.date_input("Date de fin de periode", value=None, format="DD/MM/YYYY", key="pg_fin")
+    date_fin_pg = st.date_input("Date de fin de période", value=None, format="DD/MM/YYYY", key="pg_fin")
 
-if st.button("Generer la page de garde"):
+if st.button("Générer la page de garde"):
     if not representant_pg:
-        st.error("Veuillez choisir un representant.")
+        st.error("Veuillez choisir un représentant.")
     elif date_debut_pg is None or date_fin_pg is None:
-        st.error("Veuillez selectionner la periode complete.")
+        st.error("Veuillez sélectionner la période complète.")
     else:
         try:
             supabase_pg = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
-            declarations_pg = supabase_pg.table("declaration").select("*").eq("representant", representant_pg).execute()
+            declarations_pg = supabase_pg.table("déclaration").select("*").eq("représentant", representant_pg).execute()
             df_pg = pd.DataFrame(declarations_pg.data)
             if len(df_pg) == 0:
-                st.warning("Aucune declaration trouvee pour ce representant.")
+                st.warning("Aucune déclaration trouvée pour ce représentant.")
             else:
                 df_pg["date_entree_dt"] = pd.to_datetime(df_pg["date_entree"], format="%d/%m/%Y", errors='coerce')
                 debut = pd.to_datetime(date_debut_pg)
                 fin = pd.to_datetime(date_fin_pg)
                 df_filtre_pg = df_pg[(df_pg["date_entree_dt"] >= debut) & (df_pg["date_entree_dt"] <= fin)]
                 if len(df_filtre_pg) == 0:
-                    st.warning("Aucune declaration trouvee pour cette periode.")
+                    st.warning("Aucune déclaration trouvée pour cette période.")
                 else:
                     total_v335 = int(df_filtre_pg["montant_percevoir"].sum())
                     nb_declarations = len(df_filtre_pg)
@@ -792,10 +786,10 @@ if st.button("Generer la page de garde"):
                         "date_signature": date.today().strftime("%d/%m/%Y")
                     }
                     pdf_garde = generer_page_garde(data_garde)
-                    st.success("Page de garde generee avec succes !")
-                    st.metric("Total a payer pour la periode", str(total_general) + " euros")
+                    st.success("Page de garde générée avec succes !")
+                    st.metric("Total a payer pour la période", str(total_general) + " euros")
                     st.download_button(
-                        label="Telecharger la page de garde (PDF)",
+                        label="Télécharger la page de garde (PDF)",
                         data=pdf_garde,
                         file_name="Page_de_garde_" + representant_pg.replace(" ", "_") + ".pdf",
                         mime="application/pdf"
