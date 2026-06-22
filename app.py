@@ -757,7 +757,7 @@ if st.button("Générer la page de garde"):
     else:
         try:
             supabase_pg = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
-            declarations_pg = supabase_pg.table("declaration").select("*").eq("représentant", representant_pg).execute()
+            declarations_pg = supabase_pg.table("declaration").select("*").eq("representant", representant_pg).execute()
             df_pg = pd.DataFrame(declarations_pg.data)
             if len(df_pg) == 0:
                 st.warning("Aucune déclaration trouvée pour ce représentant.")
@@ -834,7 +834,7 @@ if authentication_status:
             date_rappel = st.text_input("Date concernée", placeholder="Ex: 28/04/2026")
             email_dest = EMAILS.get(representant_rappel, "")
             sujet = "Rappel - Declaration de navire en attente - " + date_rappel
-            message = "Bonjour,%0A%0ANous vous rappelons que votre declaration de navire pour l'escale du " + date_rappel + " n'a pas encore ete soumise.%0A%0AMerci de bien vouloir la soumettre dans les plus brefs delais.%0A%0ACordialement,%0A Le Grand Port Maritime de la Martinique"
+            message = "Bonjour,%0A%0ANous vous rappelons que votre déclaration de navire pour l'escale du " + date_rappel + " n'a pas encore ete soumise.%0A%0AMerci de bien vouloir la soumettre dans les plus brefs delais.%0A%0ACordialement,%0A Le Grand Port Maritime de la Martinique"
             lien_mail = "mailto:" + email_dest + "?subject=" + sujet + "&body=" + message
             st.markdown('<a href="' + lien_mail + '" target="_blank" style="background-color:#1A5276;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;">Envoyer un rappel</a>', unsafe_allow_html=True)
         else:
