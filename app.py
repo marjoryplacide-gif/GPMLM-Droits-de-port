@@ -416,25 +416,25 @@ def generer_page_garde(data):
     c.drawCentredString(W/2, y, data['representant'].upper())
     y -= 25
     c.setFont("Helvetica-Bold", 13)
-    c.drawCentredString(W/2, y, "DECLARATION DE NAVIRE")
+    c.drawCentredString(W/2, y, "DÉCLARATION DE NAVIRE")
     y -= 20
     c.setFont("Helvetica", 10)
     c.setFillColor(colors.black)
-    c.drawCentredString(W/2, y, "Periode du " + data['date_debut'] + " au " + data['date_fin'])
+    c.drawCentredString(W/2, y, "Période du " + data['date_debut'] + " au " + data['date_fin'])
     y -= 40
 
     c.setFillColor(BLEU_PORT)
     c.rect(1*cm, y - 14, W - 2*cm, 14, fill=1, stroke=0)
     c.setFillColor(colors.white)
     c.setFont("Helvetica-Bold", 9)
-    c.drawString(1.3*cm, y - 11, "RECAPITULATIF DES DROITS DE PORT")
+    c.drawString(1.3*cm, y - 11, "RÉCAPITULATIF DES DROITS DE PORT")
     y -= 20
 
     table_data = [
         ["Code", "Libelle", "Montant (euros)"],
-        ["V335", "Redevance sur le navire", str(data['total_v335']) + " euros"],
-        ["V365", "Redevance dechets d'exploitation", str(data['total_v365']) + " euros"],
-        ["", "TOTAL GENERAL", str(data['total_general']) + " euros"],
+        ["V335", "Redevance navire", str(data['total_v335']) + " euros"],
+        ["V365", "Redevance déchets d'exploitation", str(data['total_v365']) + " euros"],
+        ["", "TOTAL GÉNÉRAL", str(data['total_general']) + " euros"],
     ]
     t = Table(table_data, colWidths=[3*cm, 9.5*cm, 5*cm])
     style = [
@@ -458,13 +458,13 @@ def generer_page_garde(data):
 
     c.setFont("Helvetica", 9)
     c.setFillColor(colors.black)
-    c.drawString(1*cm, y, "Nombre de declarations sur la periode : " + str(data['nb_declarations']))
+    c.drawString(1*cm, y, "Nombre de declarations sur la période : " + str(data['nb_declarations']))
     y -= 40
 
     from reportlab.lib.utils import simpleSplit
     c.setFont("Helvetica", 9)
-    texte = ("Je soussigne(e) " + data['representant'] + ", demeurant " + data['adresse_rep'] +
-             ", certifie sous les peines de droit, l'exactitude des enonciations de la presente declaration.")
+    texte = ("Je soussigné(e) " + data['representant'] + ", demeurant " + data['adresse_rep'] +
+             ", certifie sous les peines de droit, l'exactitude des énonciations de la présente déclaration.")
     lignes = simpleSplit(texte, "Helvetica", 9, W - 2*cm)
     for ligne in lignes:
         c.drawString(1*cm, y, ligne)
