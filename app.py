@@ -394,6 +394,98 @@ def generer_pdf(data):
     buffer.seek(0)
     return buffer
 
+def generer_page_garde(data):
+    BLEU_PORT = colors.HexColor('#1A5276')
+    BLEU_CLAIR = colors.HexColor('#2E86C1')
+    GRIS_CLAIR = colors.HexColor('#F2F3F4')
+    GRIS_MOYEN = colors.HexColor('#D5D8DC')
+    W, H = A4
+
+    buffer = io.BytesIO()
+    c = canvas.Canvas(buffer, pagesize=A4)
+
+    try:
+        c.drawImage("logo_gpmlm.png", 1*cm, H - 65, width=100, height=55,
+                    preserveAspectRatio=True, mask='auto')
+    except:
+        pass
+
+    y = H - 90
+    c.setFont("Helvetica-Bold", 16)
+    c.setFillColor(BLEU_PORT)
+    c.drawCentredString(W/2, y, data['representant'].upper())
+    y -= 25
+    c.setFont("Helvetica-Bold", 13)
+    c.drawCentredString(W/2, y, "DECLARATION DE NAVIRE")
+    y -= 20
+    c.setFont("Helvetica", 10)
+    c.setFillColor(colors.black)
+    c.drawCentredString(W/2, y, "Periode du " + data['date_debut'] + " au " + data['date_fin'])
+    y -= 40
+
+    c.setFillColor(BLEU_PORT)
+    c.rect(1*cm, y - 14, W - 2*cm, 14, fill=1, stroke=0)
+    c.setFillColor(colors.white)
+    c.setFont("Helvetica-Bold", 9)
+    c.drawString(1.3*cm, y - 11, "RECAPITULATIF DES DROITS DE PORT")
+    y -= 20
+
+    table_data = [
+        ["Code", "Libelle", "Montant (euros)"],
+        ["V335", "Redevance sur le navire", str(data['total_v335']) + " euros"],
+        ["V365", "Redevance dechets d'exploitation", str(data['total_v365']) + " euros"],
+        ["", "TOTAL GENERAL", str(data['total_general']) + " euros"],
+    ]
+    t = Table(table_data, colWidths=[3*cm, 9.5*cm, 5*cm])
+    style = [
+        ('BACKGROUND', (0,0), (-1,0), BLEU_CLAIR),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0,0), (-1,-1), 9),
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+        ('GRID', (0,0), (-1,-1), 0.4, GRIS_MOYEN),
+        ('BACKGROUND', (0,1), (-1,-2), GRIS_CLAIR),
+        ('BACKGROUND', (0,-1), (-1,-1), BLEU_PORT),
+        ('TEXTCOLOR', (0,-1), (-1,-1), colors.white),
+        ('FONTNAME', (0,-1), (-1,-1), 'Helvetica-Bold'),
+        ('ROWHEIGHT', (0,0), (-1,-1), 16),
+    ]
+    t.setStyle(TableStyle(style))
+    tw, th = t.wrapOn(c, W, H)
+    t.drawOn(c, 1*cm, y - th)
+    y -= (th + 20)
+
+    c.setFont("Helvetica", 9)
+    c.setFillColor(colors.black)
+    c.drawString(1*cm, y, "Nombre de declarations sur la periode : " + str(data['nb_declarations']))
+    y -= 40
+
+    from reportlab.lib.utils import simpleSplit
+    c.setFont("Helvetica", 9)
+    texte = ("Je soussigne(e) " + data['representant'] + ", demeurant " + data['adresse_rep'] +
+             ", certifie sous les peines de droit, l'exactitude des enonciations de la presente declaration.")
+    lignes = simpleSplit(texte, "Helvetica", 9, W - 2*cm)
+    for ligne in lignes:
+        c.drawString(1*cm, y, ligne)
+        y -= 14
+
+    y -= 20
+    c.drawString(1*cm, y, "A Fort de France, le " + data['date_signature'])
+    c.drawString(13*cm, y, "Signature :")
+    c.rect(15*cm, y - 25, 3*cm, 30, fill=0, stroke=1)
+
+    c.setStrokeColor(BLEU_PORT)
+    c.setLineWidth(1)
+    c.line(1*cm, 20, W - 1*cm, 20)
+    c.setFont("Helvetica", 6)
+    c.setFillColor(BLEU_PORT)
+    c.drawCentredString(W/2, 10, "Grand Port Maritime de la Martinique - Martinique Hub Caraibe - Our Future is Maritime")
+
+    c.save()
+    buffer.seek(0)
+    return buffer
+
 # ------------------ VISUEL DE L'INTERFACE ------------------------- 
 col_logo, col_titre = st.columns([1, 4])
 with col_logo:
@@ -645,7 +737,74 @@ if st.session_state.resultats:
 if st.session_state.get("save_success"):
     st.success("Déclaration sauvegardée avec succès !")
     st.session_state.save_success = False
-    
+
+
+
+st.markdown("---")
+st.markdown("## Page de garde - Recapitulatif periodique")
+
+col_pg1, col_pg2 = st.columns(2)
+with col_pg1:
+    representant_pg = st.selectbox("Representant", [""] + list(NAVIRES.keys()), key="pg_rep")
+with col_pg2:
+    st.write("")
+
+col_pg3, col_pg4 = st.columns(2)
+with col_pg3:
+    date_debut_pg = st.date_input("Date de debut de periode", value=None, format="DD/MM/YYYY", key="pg_debut")
+with col_pg4:
+    date_fin_pg = st.date_input("Date de fin de periode", value=None, format="DD/MM/YYYY", key="pg_fin")
+
+if st.button("Generer la page de garde"):
+    if not representant_pg:
+        st.error("Veuillez choisir un representant.")
+    elif date_debut_pg is None or date_fin_pg is None:
+        st.error("Veuillez selectionner la periode complete.")
+    else:
+        try:
+            supabase_pg = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
+            declarations_pg = supabase_pg.table("declaration").select("*").eq("representant", representant_pg).execute()
+            df_pg = pd.DataFrame(declarations_pg.data)
+            if len(df_pg) == 0:
+                st.warning("Aucune declaration trouvee pour ce representant.")
+            else:
+                df_pg["date_entree_dt"] = pd.to_datetime(df_pg["date_entree"], format="%d/%m/%Y", errors='coerce')
+                debut = pd.to_datetime(date_debut_pg)
+                fin = pd.to_datetime(date_fin_pg)
+                df_filtre_pg = df_pg[(df_pg["date_entree_dt"] >= debut) & (df_pg["date_entree_dt"] <= fin)]
+                if len(df_filtre_pg) == 0:
+                    st.warning("Aucune declaration trouvee pour cette periode.")
+                else:
+                    total_v335 = int(df_filtre_pg["montant_percevoir"].sum())
+                    nb_declarations = len(df_filtre_pg)
+                    total_v365 = nb_declarations * 65
+                    total_general = total_v335 + total_v365
+
+                    data_garde = {
+                        "representant": representant_pg,
+                        "adresse_rep": ADRESSES.get(representant_pg, ""),
+                        "date_debut": date_debut_pg.strftime("%d/%m/%Y"),
+                        "date_fin": date_fin_pg.strftime("%d/%m/%Y"),
+                        "total_v335": total_v335,
+                        "total_v365": total_v365,
+                        "total_general": total_general,
+                        "nb_declarations": nb_declarations,
+                        "date_signature": date.today().strftime("%d/%m/%Y")
+                    }
+                    pdf_garde = generer_page_garde(data_garde)
+                    st.success("Page de garde generee avec succes !")
+                    st.metric("Total a payer pour la periode", str(total_general) + " euros")
+                    st.download_button(
+                        label="Telecharger la page de garde (PDF)",
+                        data=pdf_garde,
+                        file_name="Page_de_garde_" + representant_pg.replace(" ", "_") + ".pdf",
+                        mime="application/pdf"
+                    )
+        except Exception as e:
+            st.error("Erreur : " + str(e))
+
+
+
 st.markdown("---")
 st.markdown("### Accès administration")
 authenticator = stauth.Authenticate(
