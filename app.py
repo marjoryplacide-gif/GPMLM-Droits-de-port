@@ -406,7 +406,7 @@ def generer_page_garde(data):
     c = canvas.Canvas(buffer, pagesize=A4)
 
     y = H - 100
-    c.setFont("Helvetica-Bold", 25)
+    c.setFont("Helvetica-Bold", 35)
     c.setFillColor(BLEU_PORT)
     c.drawCentredString(W/2, y, data['representant'].upper())
     y -= 25
