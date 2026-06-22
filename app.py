@@ -453,7 +453,7 @@ def generer_page_garde(data):
     c.setFont("Helvetica", 9)
     c.setFillColor(colors.black)
     c.drawString(1*cm, y, "Nombre de déclarations sur la période : " + str(data['nb_declarations']))
-    y -= 100
+    y -= 50
 
     from reportlab.lib.utils import simpleSplit
     c.setFont("Helvetica", 9)
