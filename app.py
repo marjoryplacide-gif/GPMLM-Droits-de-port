@@ -372,7 +372,7 @@ def generer_pdf(data):
     c.setFillColor(colors.black)
     c.drawString(1*cm, y, "Je soussigné(e)")
     c.drawString(3.8*cm, y, data['signataire'])
-    y -= 50
+    y -= 18
     if data['representant'] == "DSK Fish":
         c.drawString(1*cm, y, "Qualité")
         c.drawString(2.5*cm, y, data['qualite'])
@@ -404,7 +404,7 @@ def generer_page_garde(data):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=A4)
 
-    y = H - 220
+    y = H - 100
     c.setFont("Helvetica-Bold", 16)
     c.setFillColor(BLEU_PORT)
     c.drawCentredString(W/2, y, data['representant'].upper())
@@ -453,7 +453,7 @@ def generer_page_garde(data):
     c.setFont("Helvetica", 9)
     c.setFillColor(colors.black)
     c.drawString(1*cm, y, "Nombre de déclarations sur la période : " + str(data['nb_declarations']))
-    y -= 40
+    y -= 100
 
     from reportlab.lib.utils import simpleSplit
     c.setFont("Helvetica", 9)
