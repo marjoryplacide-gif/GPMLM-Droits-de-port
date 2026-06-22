@@ -394,6 +394,7 @@ def generer_pdf(data):
     buffer.seek(0)
     return buffer
 # ------------------------------- PAGE DE GARDE ---------------------------------------
+
 def generer_page_garde(data):
     BLEU_PORT = colors.HexColor('#1A5276')
     BLEU_CLAIR = colors.HexColor('#2E86C1')
@@ -405,7 +406,7 @@ def generer_page_garde(data):
     c = canvas.Canvas(buffer, pagesize=A4)
 
     y = H - 100
-    c.setFont("Helvetica-Bold", 16)
+    c.setFont("Helvetica-Bold", 20)
     c.setFillColor(BLEU_PORT)
     c.drawCentredString(W/2, y, data['representant'].upper())
     y -= 25
