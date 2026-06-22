@@ -757,7 +757,7 @@ if st.button("Générer la page de garde"):
     else:
         try:
             supabase_pg = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
-            declarations_pg = supabase_pg.table("déclaration").select("*").eq("représentant", representant_pg).execute()
+            declarations_pg = supabase_pg.table("declaration").select("*").eq("représentant", representant_pg).execute()
             df_pg = pd.DataFrame(declarations_pg.data)
             if len(df_pg) == 0:
                 st.warning("Aucune déclaration trouvée pour ce représentant.")
