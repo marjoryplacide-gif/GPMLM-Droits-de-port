@@ -764,9 +764,9 @@ if st.button("Générer la page de garde"):
         st.error("Veuillez sélectionner la période complète.")
     else:
         try:
-            supabase_pg = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
-            declarations_pg = supabase_pg.table("declaration").select("*").eq("representant", representant_pg).execute()
-            df_pg = pd.DataFrame(declarations_pg.data)
+            conn_pg = psycopg2.connect(st.secrets["NEON_URL"])
+            df_pg = pd.read_sql("SELECT * FROM declaration WHERE representant = %s", conn_pg, params=(representant_pg,))
+            conn_pg.close()
             if len(df_pg) == 0:
                 st.warning("Aucune déclaration trouvée pour ce représentant.")
             else:
@@ -865,9 +865,15 @@ if authentication_status:
                         if row.get('Reception_douane') != "Validée":
                             if st.button("Marquer comme reçu", key="recu_" + str(index)):
                                 try:
-                                    supabase.table("declaration").update(
-                                        {"Reception_douane": "Validée"}
-                                    ).eq("nom_navire", row['nom_navire']).eq("date_entree", row['date_entree']).execute()
+                                    conn_d = psycopg2.connect(st.secrets["NEON_URL"])
+                                    cur_d = conn_d.cursor()
+                                    cur_d.execute(
+                                        "UPDATE declaration SET reception_douane = 'Validée', date_validation_douane = %s WHERE nom_navire = %s AND date_entree = %s",
+                                        (datetime.now().strftime("%d/%m/%Y %H:%M"), row['nom_navire'], row['date_entree'])
+                                    )
+                                    conn_d.commit()
+                                    cur_d.close()
+                                    conn_d.close()
                                     st.rerun()
                                 except Exception as e:
                                     st.error("Erreur : " + str(e))
