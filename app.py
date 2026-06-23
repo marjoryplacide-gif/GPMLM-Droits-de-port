@@ -137,26 +137,33 @@ credentials = {
 #-------------------- SAUVEGARDE------------------------------------------
 def sauvegarder_declaration(data):
     try:
-        supabase = create_client(
-            st.secrets["SUPABASE_URL"],
-            st.secrets["SUPABASE_KEY"]
-        )
-        supabase.table("declaration").insert({
-            "date_entree": str(data["date_entree"]),
-            "date_sortie": str(data["date_sortie"]),
-            "representant": data["representant"],
-            "nom_navire": data["nom_navire"],
-            "provenance": data["provenance"],
-            "zone_dn": data["zone_dn"],
-            "tonnage": float(data["tonnage"]),
-            "volume": int(data["volume"]),
-            "taux_base": float(data["taux_base"]),
-            "montant_brut": int(data["montant_brut"]),
-            "montant_net": int(data["montant_net"]),
-            "montant_percevoir": int(data["montant_percevoir"]),
-            "montant_final": int(data["montant_percevoir"]) + 65,
-            "statut": "Terminée"
-        }).execute()
+        conn = psycopg2.connect(st.secrets["NEON_URL"])
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO declaration (
+                date_entree, date_sortie, representant, nom_navire, provenance,
+                zone_dn, tonnage, volume, taux_base, montant_brut, montant_net,
+                montant_percevoir, montant_final, statut
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (
+            str(data["date_entree"]),
+            str(data["date_sortie"]),
+            data["representant"],
+            data["nom_navire"],
+            data["provenance"],
+            data["zone_dn"],
+            float(data["tonnage"]),
+            int(data["volume"]),
+            float(data["taux_base"]),
+            int(data["montant_brut"]),
+            int(data["montant_net"]),
+            int(data["montant_percevoir"]),
+            int(data["montant_percevoir"]) + 65,
+            "Terminee"
+        ))
+        conn.commit()
+        cur.close()
+        conn.close()
         st.session_state.save_success = True
         return True
     except Exception as e:
