@@ -5,3 +5,4 @@ openpyxl
 requests
 supabase
 streamlit-authenticator==0.3.3
+psycopg2-binary
