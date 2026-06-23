@@ -824,9 +824,9 @@ if authentication_status:
     st.success("Connecté en tant que " + str(name))
     authenticator.logout("Déconnexion", "main")
     
-conn = psycopg2.connect(st.secrets["NEON_URL"])
-df = pd.read_sql("SELECT * FROM declaration", conn)
-conn.close()
+    conn = psycopg2.connect(st.secrets["NEON_URL"])
+    df = pd.read_sql("SELECT * FROM declaration", conn)
+    conn.close()
     if 'id' in df.columns:
         df = df.sort_values(by='id', ascending=False)
 
