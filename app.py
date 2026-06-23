@@ -824,12 +824,9 @@ if authentication_status:
     st.success("Connecté en tant que " + str(name))
     authenticator.logout("Déconnexion", "main")
     
-    supabase = create_client(
-        st.secrets["SUPABASE_URL"],
-        st.secrets["SUPABASE_KEY"]
-    )
-    declarations = supabase.table("declaration").select("*").execute()
-    df = pd.DataFrame(declarations.data)
+conn = psycopg2.connect(st.secrets["NEON_URL"])
+df = pd.read_sql("SELECT * FROM declaration", conn)
+conn.close()
     if 'id' in df.columns:
         df = df.sort_values(by='id', ascending=False)
 
