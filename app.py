@@ -9,7 +9,7 @@ from reportlab.platypus import Table, TableStyle
 import io
 import math
 import openpyxl
-from supabase import create_client
+import psycopg2
 import streamlit_authenticator as stauth
 from datetime import date 
 
