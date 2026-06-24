@@ -144,8 +144,8 @@ def sauvegarder_declaration(data):
             INSERT INTO declaration (
                 date_entree, date_sortie, representant, nom_navire, provenance,
                 zone_dn, tonnage, volume, taux_base, montant_brut, montant_net,
-                montant_percevoir, montant_final, statut
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                montant_percevoir, montant_final, statut, date_creation_dn
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             str(data["date_entree"]),
             str(data["date_sortie"]),
@@ -160,7 +160,8 @@ def sauvegarder_declaration(data):
             int(data["montant_net"]),
             int(data["montant_percevoir"]),
             int(data["montant_percevoir"]) + 65,
-            "Terminee"
+            "Terminee",
+            datetime.now(ZoneInfo("America/Martinique")).strftime("%d/%m/%Y %H:%M")
         ))
         conn.commit()
         cur.close()
