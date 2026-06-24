@@ -12,6 +12,7 @@ import openpyxl
 import psycopg2
 import streamlit_authenticator as stauth
 from datetime import date, datetime
+from zoneinfo import ZoneInfo
 
     
 st.set_page_config(
@@ -869,7 +870,7 @@ if authentication_status:
                                     cur_d = conn_d.cursor()
                                     cur_d.execute(
                                         "UPDATE declaration SET reception_douane = 'Validée', date_validation_douane = %s WHERE nom_navire = %s AND date_entree = %s",
-                                        (datetime.now().strftime("%d/%m/%Y %H:%M"), row['nom_navire'], row['date_entree'])
+                                        (datetime.now(ZoneInfo("America/Martinique")).strftime("%d/%m/%Y %H:%M"), row['nom_navire'], row['date_entree'])
                                     )
                                     conn_d.commit()
                                     cur_d.close()
