@@ -797,7 +797,7 @@ if st.button("Générer la page de garde"):
                     }
                     pdf_garde = generer_page_garde(data_garde)
                     st.success("Page de garde générée avec succes !")
-                    st.metric("Total a payer pour la période", str(total_general) + " euros")
+                    st.metric("Total à payer pour la période", str(total_general) + " euros")
                     st.download_button(
                         label="Télécharger la page de garde (PDF)",
                         data=pdf_garde,
