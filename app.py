@@ -591,7 +591,7 @@ with col2:
     st.header(" Escale")
     date_entree =  st.date_input("Date d'entrée", value = None, format="DD/MM/YYYY", key=str(st.session_state.form_key) + "_de")
     date_sortie =  st.date_input("Date de sortie", value = None, format="DD/MM/YYYY", key=str(st.session_state.form_key) + "_ds")
-    provenance = st.selectbox("Provenance (port d'origine)",[""] + ["MARGUARITA","VENEZUELA","GRENADE", "AUTRE"], key=str(st.session_state.form_key) + "_prov")
+    provenance = st.selectbox("Provenance (port d'origine)",[""] + ["MARGUARITA","VENEZUELA","GRENADE", "AUTRE"], index=0, placeholder="Sélectionner...", key=str(st.session_state.form_key) + "_prov")
     zone_dn = st.selectbox("Zone DN", ["A (Pointe des Grives)","B (Pointe Simon)","C (Quai de Tourelle)","D (App. rivière Monsieur)","E (Cohé du Lamentin)","F (Bellefontaine)","G (Gare maritime inter-îles)","H (Hydrobase)","I (Quai du Robert)","J (Batellerie)","M (zone de mouillages)","R (quai ro-ro)","Z (autre)"], index =9, key=str(st.session_state.form_key) + "_zone")
     tonnage = st.number_input("Tonnage (tonnes)", min_value=0.0, max_value=10.0, step=0.001, format="%.3f", key=str(st.session_state.form_key) + "_ton")
 
@@ -609,7 +609,7 @@ with col1:
             for compagnie in NAVIRES.values() 
             for navire in compagnie.keys()
 )))
-        nom_navire = st.selectbox("Nom du navire", tous_navires, key=str(st.session_state.form_key) + "_nav")
+        nom_navire = st.selectbox("Nom du navire", tous_navires, index=0, placeholder="Sélectionner...", key=str(st.session_state.form_key) + "_nav")
         if nom_navire:
             carac = next(
                 NAVIRES[c][nom_navire] 
@@ -751,7 +751,7 @@ st.markdown("## Page de garde - Récapitulatif périodique")
 
 col_pg1, col_pg2 = st.columns(2)
 with col_pg1:
-   representant_pg = st.selectbox("Représentant", [""] + list(NAVIRES.keys()), key="pg_rep")
+   representant_pg = st.selectbox("Représentant", [""] + list(NAVIRES.keys()),index=0, placeholder="Sélectionner...", key="pg_rep")
 with col_pg2:
     st.write("")
 
