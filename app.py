@@ -36,6 +36,8 @@ def charger_navires():
         navire = str(row["Nom du Navire"]).strip()
          if compagnie == "nan" or navire == "nan" or compagnie == "" or navire == "":
             continue
+         if compagnie not in navires:
+            navires[compagnie] = {}
         navires[compagnie][navire] = {
             "longueur": float(row["Longueur hors tout (m)"]),
             "largeur": float(row["Largueur maximal (m)"]),
