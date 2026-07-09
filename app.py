@@ -598,7 +598,7 @@ with col2:
 with col1:
     st.header ("Navire")
     if NAVIRES:
-        representant = st.selectbox("Représentant", [""] + list(NAVIRES.keys()), key=str(st.session_state.form_key) + "_rep")
+        representant = st.selectbox("Représentant", [""] + list(NAVIRES.keys()),index=0, placeholder="Sélectionner...", key=str(st.session_state.form_key) + "_rep")
         tous_navires = list(set(
             navire 
             for compagnie in NAVIRES.values() 
