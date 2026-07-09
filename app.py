@@ -749,7 +749,7 @@ st.markdown("## Page de garde - Récapitulatif périodique")
 
 col_pg1, col_pg2 = st.columns(2)
 with col_pg1:
-    representant_pg = st.selectbox("Représentant", [""] + list(NAVIRES.keys()), key="pg_rep")
+   representant_pg = st.selectbox("Représentant", [""] + [x for x in NAVIRES.keys() if str(x) != "nan" and str(x).strip() != ""], index=0, placeholder="Sélectionner...", key="pg_rep")
 with col_pg2:
     st.write("")
 
